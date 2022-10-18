@@ -33,7 +33,7 @@ function subir(clave, valor) {
     localStorage.setItem(clave, valor);
 }
 function bajar(clave) {
-    localStorage.getItem(clave);
+    return localStorage.getItem(clave);
 }
 function iniciar() {
     var listaCamareros = [];
@@ -48,17 +48,36 @@ function iniciar() {
         listaCamareros.push(camarero);
     }
     subir("camarero", JSON.stringify(listaCamareros))
-    
-    var listaMesas=[];
+
+    var listaMesas = [];
     for (let i = 1; i < 11; i++) {
-        var mesa = {
+
+        if (i%2 == 0 ){
+            var mesa = {
+                numero: `${i}`,
+                estado: 'cerrada',
+                id_camarero: 0,
+                comanda: []
+            } }else {
+                var mesa = {
+                    numero: `${i}`,
+                    estado: 'abierta',
+                    id_camarero: 2,
+                    comanda: []
+                }
+
+            }
+            listaMesas.push(mesa);
+
+        }
+       /* var mesa = {
             numero: `${i}`,
             estado: 'cerrada',
             id_camarero: 0,
-            comanda: {}
-        }
-        listaMesas.push(mesa);
-    }
+            comanda: []
+        }*/
+    
+    
     subir("mesa", JSON.stringify(listaMesas));
 
     var menu = {
@@ -70,3 +89,50 @@ function iniciar() {
 }
 
 
+var camareroPrueba = {
+    id_camarero: 1,
+    nombre_camarero: `Jorge`,
+    password: "1234",
+    mesasActuales: {},
+    mesasAtendidas: {}
+}
+
+iniciar();
+function camareroIn() {
+    var camareros = JSON.parse(bajar('camarero'));
+    var camareroActual = camareros[1]
+    var mesas = JSON.parse(bajar('mesa'));
+    document.getElementById('c_nombre').innerText = camareros[1].nombre_camarero
+    console.log(mesas);
+    cargarMesas(camareroActual, mesas);
+}
+
+function cargarMesas(camareroActual, mesas) {
+
+    for (let i = 0; i < 10; i++) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual.id_camarero) {
+            var divMesa = document.createElement('button');
+            divMesa.className = `c_mesasA mesa${i}`;
+            divMesa.addEventListener('click', () => { checkMesa(`${i+1}`); })
+            var numero = document.createTextNode((mesas[i].numero));
+            divMesa.appendChild(numero);
+            document.querySelector('.c_cpntainer1').appendChild(divMesa);
+        }
+        if (mesas[i].estado == 'cerrada') {
+            var divMesa = document.createElement('button');
+            divMesa.className = `c_mesasC mesa${i}`;
+            divMesa.addEventListener('click', () => { checkMesa(`${i+1}`); })
+            var numero = document.createTextNode((mesas[i].numero));
+            divMesa.appendChild(numero);
+            document.querySelector('.c_cpntainer2').appendChild(divMesa);
+        }
+    }
+}
+
+    function checkMesa(num){
+console.log(num);
+    }
+
+    function historial(camarero) {
+
+    }
