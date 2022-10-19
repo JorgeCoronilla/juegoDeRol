@@ -8,7 +8,7 @@
     <title>Ticket</title>
 </head>
 
-<body>
+<body onload="imprimirTicket(localStorage.ticketSeleccionado)">
     <div id="t_head">
         <h1>Cafeteria THE BRIDGE</h1>
         <h3>The bridge Academy</h3>
@@ -32,6 +32,7 @@
             <p id="t_total"></p>
         </div>
     </div>
+    <button id="t_pagar" onclick="pagar()">Pagar con tarjeta</button>
 </body>
 <script src="script.js"></script>
 </html>

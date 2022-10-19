@@ -77,42 +77,45 @@ function guardarTicket() {
 
 //Inicializamos datos basicos para el restaurante: menu, mesa y camareros
 function iniciar() {
-    var listaCamareros = [];
-    for (let i = 1; i < 5; i++) {
-        var camarero = {
-            id_camarero: `${i}`,
-            nombre_camarero: `camarero${i}`,
-            password: "1234",
-            mesasActuales: {},
-            mesasAtendidas: {}
+    if (localStorage.length == 0) {
+        var listaCamareros = [];
+        for (let i = 1; i < 5; i++) {
+            var camarero = {
+                id_camarero: `${i}`,
+                nombre_camarero: `camarero${i}`,
+                password: "1234",
+                mesasActuales: {},
+                mesasAtendidas: {}
+            }
+            listaCamareros.push(camarero);
         }
-        listaCamareros.push(camarero);
-    }
-    subir("camarero", JSON.stringify(listaCamareros))
+        subir("camarero", JSON.stringify(listaCamareros))
 
-    var listaMesas = [];
-    for (let i = 1; i < 11; i++) {
+        var listaMesas = [];
+        for (let i = 1; i < 11; i++) {
 
-        var mesa = {
-            numero: `${i}`,
-            estado: 'cerrada',
-            id_camarero: 0,
-            comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            var mesa = {
+                numero: `${i}`,
+                estado: 'cerrada',
+                id_camarero: 0,
+                comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+            listaMesas.push(mesa);
         }
-        listaMesas.push(mesa);
-    }
 
-    subir("mesa", JSON.stringify(listaMesas));
+        subir("mesa", JSON.stringify(listaMesas));
 
-    var menu = {
-        "id_articulo": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        'nombre': ['tinto', 'blanco', 'cerveza', 'refresco', 'zumo', 'café', 'café especial', 'gazpacho', 'ensalada mixta', 'ensaladilla', 'lasaña', 'puré de verduras', 'secreto ibérico', 'escalope de pollo', 'bacalao a la riojana', 'hamburguesa', 'tarta de queso', 'fruta del tiempo', 'flan de la casa', 'tarta de la abuela', 'Varios'],
-        'precio': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
+        var menu = {
+            "id_articulo": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            'nombre': ['tinto', 'blanco', 'cerveza', 'refresco', 'zumo', 'café', 'café especial', 'gazpacho', 'ensalada mixta', 'ensaladilla', 'lasaña', 'puré de verduras', 'secreto ibérico', 'escalope de pollo', 'bacalao a la riojana', 'hamburguesa', 'tarta de queso', 'fruta del tiempo', 'flan de la casa', 'tarta de la abuela', 'Varios'],
+            'precio': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
+        }
+        subir('menu', JSON.stringify(menu));
     }
-    subir('menu', JSON.stringify(menu));
 }
 
-
+//---------------------------------------- FUNCIONES INDEX ---------------------------------
+//Funcion logIn de camareros y admin
 
 function iniciarSesion() {
     let loginUser = document.getElementById("a_nombre").value;
@@ -141,21 +144,8 @@ function iniciarSesion() {
         if (!loginok) { alert("Usuario y/o contraseña incorrecta") }
     }
 }
-/* function iniciarTicket() {
-    var fecha = new Date;
-    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes()
-    var ticket = {
-        id_ticket: 0,
-        fecha: fechaticket,
-        id_mesa: 3,
-        nombre_camarero: "camarero3",
-        comanda: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        total: 546,
-        pagado: false,
-    }
-    subir("ticket", JSON.stringify(ticket))
-} */
 
+// Funcion para que el cliente pueda ver el ticket de su consumicion y pagarlo.
 
 function imprimirTicket(id_ticket_entrada) {
     let tabla = document.getElementById("t_tabla");
@@ -194,12 +184,95 @@ function imprimirTicket(id_ticket_entrada) {
         }
     }
     var p_total = document.getElementById("t_total");
-    console.log(p_total)
-    console.log(totalCuenta)
-    p_total.innerText = `${totalCuenta} €`
+    p_total.innerText = `${totalCuenta} €`;
+    var p_camarero = document.getElementById("t_nombreCamarero");
+    p_camarero.innerText = ticket[0].nombre_camarero;
+    var p_id_ticket = document.getElementById("t_id_ticket");
+    p_id_ticket.innerText = ticket[0].id_ticket;
+    var p_id_mesa = document.getElementById("t_id_mesa");
+    p_id_mesa.innerText = ticket[0].id_mesa;
+}
 
+function consulta_ticket(id_ticket) {
+    localStorage.setItem("ticketSeleccionado", id_ticket);
+    window.location = "ticket.html";
+}
+
+
+// ---------------------------------------PASARELA DE PAGO -----------------------------------
+function pagar() {
+    var ticketSeleccionado = localStorage.ticketSeleccionado
+    console.log(ticketSeleccionado)
+    var precio = JSON.parse(localStorage.ticket)[ticketSeleccionado].total
+    console.log(precio)
+    var p_total = document.getElementById("p_total")
+    p_total.innerText = precio + "€"
+}
+
+function checkPago() {
+    var visa = document.getElementById("num_tarjeta").value
+    console.log(visa)
+    var regexp = /^(?:4\d([\- ])?\d{6}\1\d{5}|(?:4\d{3}|5[1-5]\d{2}|6011)([\- ])?\d{4}\2\d{4}\2\d{4})$/
+    var validation = true
+    var validationCard = regexp.test(visa)
+    console.log(validationCard)
+    console.log((visa.match(/^4\d{3}-?\d{4}-?\d{4}-?\d{4}$/)))
+    console.log((visa.match(/^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/)))
+    var nombre = document.getElementById("nombre_tarjeta").value;
+    if (!nombre.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
+        alert("El nombre introducido no es válido.");
+        validation = false;
+    }
+    var mes = document.getElementById("mes_tarjeta").value;
+    var ano = document.getElementById("ano_tarjeta").value;
+    if (mes.length != 2 && mes <= 12) {
+        alert("El Mes debe estar escrito con dos cifras.")
+        validation = false;
+    }
+
+    if (ano.length != 2 && ano >= 22) {
+        alert("El Año debe estar escrito con dos cifras.")
+        validation = false;
+    }
+    var cvv = document.getElementById("cvv").value
+    if (cvv.length != 3) {
+        alert("El CVV debe tener tres cifras")
+        validation = false
+    }
+    if (!validationCard) { alert("El número de tarjeta introducido no es Visa o Mastercard") }
+    if (validation && validationCard) {
+        alert("Operación finalizada con éxito.")
+        window.location = "index.html"
+    }
 
 }
+// ---------------------------------------------- FUNCIONES ADMIN -------------------------------------
+
+function mostrarDatos() {
+    let users = JSON.parse(localStorage.camarero);
+    let username = users.map(element => element.nombre_camarero);
+    let password = users.map(element => element.password);
+    var placeholders_name = document.getElementsByClassName("userName");
+    var placeholders_pass = document.getElementsByClassName("userPass");
+    console.log(placeholders_name)
+    console.log(placeholders_pass)
+    for (let i = 0; i < placeholders_name.length; i++) {
+        placeholders_name[i].placeholder = username[i];
+        placeholders_pass[i].placeholder = password[i];
+    };
+}
+function guardarCambios(){
+    var name = document.getElementsByClassName("userName").value;
+    var pass = document.getElementsByClassName("userPass").value;
+    var placeholders_name = document.getElementsByClassName("userName");
+    var placeholders_pass = document.getElementsByClassName("userPass");
+    let users = JSON.parse(localStorage.camarero);
+    for (let i = 0; i < placeholders_name.length; i++) {
+        placeholders_name[i].placeholder = username[i];
+        placeholders_pass[i].placeholder = password[i];
+    };
+}
+
 
 
 
@@ -485,7 +558,19 @@ class Ticket {
 function cerrarMesa(mesa, mesaActual) {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
+    let users = JSON.parse(localStorage.camarero);
+    let username = users.map(element => element.nombre_camarero);
     var camareroActual = localStorage.getItem("camareroActual")
+    switch (camareroActual) {
+        case "1": camareroActual = username[0]
+            break;
+        case "2": camareroActual = username[1]
+            break;
+        case "3": camareroActual = username[2]
+            break;
+        case "4": camareroActual = username[3]
+            break;
+    }
     var menu = JSON.parse(localStorage.getItem('menu'));
     var total = 0;
     var pagado = false;
