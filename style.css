@@ -1,0 +1,42 @@
+#a_gestion{
+    margin-left: 20px;
+    margin-bottom: 50px;
+}
+#a_tabla{
+    padding-left: 30px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.a_tablaH, .a_tablaR {
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.a_rendimiento{
+    display: block;
+    width:30%;
+    height: 30px;
+}
+.a_ids{
+    height: 30px;
+    width: 10%;
+}
+
+.a_tablaR input{
+    margin: 10px 5px;
+    width: 30%;
+    height: 30px; ;
+}
+#a_resultados{
+    margin-left: 20px;
+    margin-bottom: 30px;
+}
+#a_gestion button{
+    margin: 20%;
+    margin-top: 20px;
+    margin-bottom: 0%
+    ;
+}
