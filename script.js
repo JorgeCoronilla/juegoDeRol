@@ -309,14 +309,8 @@ if (tickets[i].nombre_camarero=='3') {
     fechas4.push(tickets[i].total)
 }
 }
-/*
-const labels = [
-    'total',
-    camareros[0].nombre_camarero,
-    camareros[1].nombre_camarero,
-    camareros[2].nombre_camarero,
-    camareros[3].nombre_camarero
-];*/
+
+
 const labels = [
     'total',
     camareros[0].nombre_camarero,
@@ -352,7 +346,7 @@ function camareroIn() {
     var camareros = JSON.parse(bajar('camarero'));
     var camareroActual = parseInt(localStorage.getItem('camareroActual'));
     var mesas = JSON.parse(bajar('mesa'));
-    document.getElementById('c_nombre').innerText = camareros[camareroActual].nombre_camarero
+    document.getElementById('c_nombre').innerText = camareros[(camareroActual-1)].nombre_camarero
     cargarMesas(camareroActual, mesas);
 }
 
@@ -371,7 +365,7 @@ function cargarMesas(camareroActual, mesas) {
     borraMesas();
     for (let i = 0; i < 10; i++) {
         //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual.id_camarero) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual) {
             var divMesa = document.createElement('button');
             divMesa.className = `c_mesasA`;
             divMesa.addEventListener('click', () => { enviaMesa(i); })
@@ -391,7 +385,7 @@ function cargarMesas(camareroActual, mesas) {
         }
 
         //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual.id_camarero) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual) {
             var divMesa = document.createElement('button');
             divMesa.className = `c_mesasR`;
             var numero = document.createTextNode(mesas[i].numero);
@@ -406,7 +400,7 @@ function cargarMesas(camareroActual, mesas) {
 function checkMesa(indice, camareroActual) {
     var mesasArriba = JSON.parse(bajar('mesa'));
     mesasArriba[indice].estado = 'abierta';
-    mesasArriba[indice].id_camarero = camareroActual.id_camarero;
+    mesasArriba[indice].id_camarero = camareroActual;
     subir('mesa', JSON.stringify(mesasArriba));
     camareroIn();
     enviaMesa(indice)
@@ -668,38 +662,36 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
     mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     localStorage.setItem('mesa', JSON.stringify(mesa));
 
-    window.location = 'http://127.0.0.1:5500/juegoDeRol/camarero.html';
+    window.location = 'camarero.html';
 }
 
 
-window.addEventListener('load', () => {
-    if (window.location == 'http://127.0.0.1:5500/juegoDeRol/mesa.html') {
-        iniciarDesplegables();
-        sumarYRestar();
-        var añadir = añadirComanda();
-        verComanda(añadir[0], añadir[1]);
+function iniciarMesa(){
+    iniciarDesplegables();
+    sumarYRestar();
+    var añadir = añadirComanda();
+    verComanda(añadir[0], añadir[1]);
 
-        var cerrar = document.querySelector('#m_cerrarMesa');
-        cerrar.addEventListener('click', () => {
-            cerrarMesa(añadir[0], añadir[1], añadir[2]);
-        });
+    var cerrar = document.querySelector('#m_cerrarMesa');
+    cerrar.addEventListener('click', () => {
+        cerrarMesa(añadir[0], añadir[1], añadir[2]);
+    });
 
-        //Estilo desplegable
-        var desplegables = document.getElementsByClassName('m_desplegables');
-        var opciones = document.querySelectorAll('.m_opciones h2');
-        for (let i = 0; i < opciones.length; i++) {
-            opciones[i].addEventListener('click', () => {
-                desplegar(desplegables[i]);
-            });
-        }
-
-        //Boton de Volver
-        var volver = document.querySelector('#m_volver');
-        volver.addEventListener('click', () => {
-            window.location = 'camarero.html'
+    //Estilo desplegable
+    var desplegables = document.getElementsByClassName('m_desplegables');
+    var opciones = document.querySelectorAll('.m_opciones h2');
+    for (let i = 0; i < opciones.length; i++) {
+        opciones[i].addEventListener('click', () => {
+            desplegar(desplegables[i]);
         });
     }
-});
+
+    //Boton de Volver
+    var volver = document.querySelector('#m_volver');
+    volver.addEventListener('click', () => {
+        window.location = 'camarero.html'
+    });
+}
 
 
 

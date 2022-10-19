@@ -1,3 +1,5 @@
+/*---ADMIN--- */
+
 #a_gestion{
     margin-left: 20px;
     margin-bottom: 50px;
@@ -39,4 +41,208 @@
     margin-top: 20px;
     margin-bottom: 0%
     ;
+}
+
+/*-----CAMARERO-------*/
+.c_cpntainer1, .c_cpntainer2, .c_cpntainer3 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items:center;
+}
+
+.c_cpntainer1 div, .c_cpntainer2 div, .c_cpntainer3 div {
+    align-self: center;
+    margin: 0 auto 0 auto;
+} 
+
+.c_mesasA {
+    width: 50px;
+    height: 50px;
+    background-color: aquamarine;
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.c_mesasA:hover {
+    background-color: rgb(21, 255, 177);
+}
+
+.c_mesasC {
+    width: 50px;
+    height: 50px;
+    background-color: rgb(127, 187, 255);
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.c_mesasC:hover {
+    background-color: rgb(71, 157, 255);
+}
+
+.c_mesasR {
+    width: 50px;
+    height: 50px;
+    background-color: crimson;
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.c_mesasR:hover {
+    background-color: rgb(255, 0, 51);
+}
+#c_header {
+    background-color: rgb(0, 0, 0, 0.5);
+    color: white;
+    text-align: right;
+    
+}
+#c_header h4 {
+    font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.c_style {
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.c_style1 {
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    background-color: brown;
+    color: white;
+}
+
+.c_ticket {
+    width: 150px;
+    height: 50px;
+    background-color: rgb(201, 201, 201);
+    margin: 5px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* ----MESA----*/
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+#m_contenedorGeneral {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div#m_volver {
+    position: fixed;
+    font-weight: bold;
+    top: 10px;
+    right: 10px;
+    background-color: black;
+    color: white;
+    padding: 4px;
+    border-radius: 5px;
+}
+
+section#m_mesa {
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div#m_comanda {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+section#m_mesa h1 {
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    font-size: 40px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+
+section#m_menu {
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div#m_botones {
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div.m_opciones {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+div.m_opciones h2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(174, 174, 174);
+}
+
+.m_desplegables {
+    display: none;
+}
+
+.m_desplegables li {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.m_desplegables li .articulo {
+    margin-left: 80px;
+}
+
+.m_desplegables li>span {
+    margin-right: 80px;
+}
+
+#m_contenedorGeneral li {
+    list-style: none;
+}
+
+#m_botones #m_añadir{
+    margin: 8px;
+    background-color: black;
+    color: white;
+    padding: 4px;
+    border-radius: 5px;
+}
+#m_botones #m_cerrarMesa{
+    margin: 8px;
+    background-color: black;
+    color: white;
+    padding: 4px;
+    border-radius: 5px;
 }
