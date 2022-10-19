@@ -28,6 +28,9 @@ ticket{
     total: 
     pagado: true o false
 }
+
+IDS PARA EL HTML ==>> a_xxxx = admin.html, c_xxxx = camarero.html, m_xxxx = mesa.html 
+
 */
 function subir(clave, valor) {
     localStorage.setItem(clave, valor);
@@ -48,8 +51,8 @@ function iniciar() {
         listaCamareros.push(camarero);
     }
     subir("camarero", JSON.stringify(listaCamareros))
-    
-    var listaMesas=[];
+
+    var listaMesas = [];
     for (let i = 1; i < 11; i++) {
         var mesa = {
             numero: `${i}`,
@@ -69,4 +72,54 @@ function iniciar() {
     subir('menu', JSON.stringify(menu));
 }
 
+function iniciarSesion() {
+    let loginUser = document.getElementById("a_nombre").value;
+    let loginPass = document.getElementById("password").value;
+    let users = JSON.parse(localStorage.camarero);
+    let username = users.map(element => element.nombre_camarero);
+    let password = users.map(element => element.password);
+    if (loginUser == "admin" && loginPass == "nimda") {
+        window.location = "admin.html"
+    }
+    else {
+        let i = 0;
+        while (loginUser == username[i]) {
+            i++;
+        }
+        if (loginPass == password[i]) {
+            window.location = "camarero.html"
+        } else {
+            alert("El usuario y/o la contraseña no son válidos.")
+        }
+    }
+}
 
+//---------------------------------------- GRAFICA RESULTADOS -------------------------------------------------------------------------------------
+const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {}
+  };
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+    );
