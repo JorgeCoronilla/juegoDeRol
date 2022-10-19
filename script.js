@@ -383,7 +383,7 @@ function iniciarDesplegables() {
     }
 
     let m = 16;
-    while (m < 20) {
+    while (m < 21) {
         //Postres
         let li = document.createElement('li');
         desplegables[3].append(li);
@@ -427,17 +427,17 @@ function añadirComanda() {
     var mesa = JSON.parse(localStorage.getItem('mesa'));
     // localStorage.setItem('mesaActual', 1);
     var mesaActual = parseInt(localStorage.getItem('mesaActual'));
-    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + mesaActual;
-    document.querySelector('#m_cerrarMesa').innerHTML = 'Cerrar Mesa' + ' ' + mesaActual;
+    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
+    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + (mesaActual + 1);
+    document.querySelector('#m_cerrarMesa').innerHTML = 'Generar Cuenta Mesa' + ' ' + (mesaActual + 1);
     var comanda = mesa[mesaActual].comanda;
 
     //Añadir cantidades
     var spanCantidad = document.getElementsByClassName('cantidad');
-    var li = document.getElementsByTagName('li');
 
     var añadir = document.getElementById('m_añadir');
     añadir.addEventListener('click', () => {
-        for (let i = 0; i < li.length; i++) {
+        for (let i = 0; i < spanCantidad.length; i++) {
             let cantidad = spanCantidad[i].innerHTML;
             if (cantidad > 0) {
                 comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
@@ -445,9 +445,47 @@ function añadirComanda() {
             }
         }
         mesa[mesaActual].comanda = comanda;
+        mesa[mesaActual].id_camarero = camareroActual;
         localStorage.setItem('mesa', JSON.stringify(mesa));
+        verComanda(mesa, mesaActual)
     });
-    return [mesa, mesaActual]
+
+    return [mesa, mesaActual, camareroActual]
+}
+
+function borraComanda() {
+    var mostrarComanda = document.querySelector('#m_comanda');
+    borrarChild(mostrarComanda);
+}
+
+function verComanda(mesa, mesaActual) {
+    borraComanda();
+    var menu = JSON.parse(localStorage.getItem('menu'));
+    var mostrarComanda = document.querySelector('#m_comanda');
+    let ul = document.createElement('ul');
+    ul.style.display = 'flex';
+    ul.style['flex-flow'] = 'row wrap';
+    ul.style['justify-content'] = 'space-evenly';
+
+    let h2 = document.createElement('h2');
+    h2.style.display = 'flex';
+    h2.style['flex-flow'] = 'column wrap';
+    h2.style['align-items'] = 'center';
+    h2.innerHTML = 'Comanda';
+
+    mostrarComanda.append(h2);
+    mostrarComanda.append(ul);
+
+    for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
+        if (mesa[mesaActual].comanda[j] > 0) {
+            let li = document.createElement('li');
+            li.style.padding = '5px';
+            li.style.margin = '3px';
+            li.style.border = '1px solid black';
+            li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
+            ul.append(li);
+        }
+    }
 }
 
 //funcion desplegables para reutilizar en los clicks
@@ -482,10 +520,10 @@ class Ticket {
 }
 
 //Cerrar Mesa
-function cerrarMesa(mesa, mesaActual) {
+function cerrarMesa(mesa, mesaActual, camareroActual) {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
-    var camareroActual = localStorage.getItem("camareroActual")
+    // var camareroActual = localStorage.getItem("camareroActual")
     var menu = JSON.parse(localStorage.getItem('menu'));
     var total = 0;
     var pagado = false;
@@ -521,25 +559,36 @@ function cerrarMesa(mesa, mesaActual) {
     mesa[mesaActual].estado = 'cerrada';
     mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     localStorage.setItem('mesa', JSON.stringify(mesa));
+
+    window.location = 'http://127.0.0.1:5500/juegoDeRol/camarero.html';
 }
 
 
 window.addEventListener('load', () => {
-    iniciarDesplegables();
-    sumarYRestar();
-    var añadir = añadirComanda();
+    if (window.location == 'http://127.0.0.1:5500/juegoDeRol/mesa.html') {
+        iniciarDesplegables();
+        sumarYRestar();
+        var añadir = añadirComanda();
+        verComanda(añadir[0], añadir[1]);
 
-    var cerrar = document.querySelector('#m_cerrarMesa');
-    cerrar.addEventListener('click', () => {
-        cerrarMesa(añadir[0], añadir[1]);
-    });
+        var cerrar = document.querySelector('#m_cerrarMesa');
+        cerrar.addEventListener('click', () => {
+            cerrarMesa(añadir[0], añadir[1], añadir[2]);
+        });
 
-    //Estilo desplegable
-    var desplegables = document.getElementsByClassName('m_desplegables');
-    var opciones = document.querySelectorAll('.m_opciones h2');
-    for (let i = 0; i < opciones.length; i++) {
-        opciones[i].addEventListener('click', () => {
-            desplegar(desplegables[i]);
+        //Estilo desplegable
+        var desplegables = document.getElementsByClassName('m_desplegables');
+        var opciones = document.querySelectorAll('.m_opciones h2');
+        for (let i = 0; i < opciones.length; i++) {
+            opciones[i].addEventListener('click', () => {
+                desplegar(desplegables[i]);
+            });
+        }
+
+        //Boton de Volver
+        var volver = document.querySelector('#m_volver');
+        volver.addEventListener('click', () => {
+            window.location = 'camarero.html'
         });
     }
 });
