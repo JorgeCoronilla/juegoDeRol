@@ -2,8 +2,43 @@ function subir(clave, valor) {
     localStorage.setItem(clave, valor);
 }
 function bajar(clave) {
-    localStorage.getItem(clave);
+    localStorage.getItem(JSON.stringify(clave));
 }
+
+//
+function iniciarTicket() {
+    var fecha = new Date;
+    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes()
+    var ticket = {
+        id_ticket: 0,
+        fecha: fechaticket,
+        id_mesa: 0,
+        nombre_camarero: "camarero3",
+        comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        total: 0,
+        pagado: false,
+    }
+    subir("ticket", JSON.stringify(ticket))
+}
+function guardarTicket() {
+    var fecha = new Date;
+    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
+    var ticketsLista = [JSON.parse(localStorage.getItem("ticket"))];
+    console.log(ticketsLista)
+    var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket;
+    var ticket = {
+        id_ticket: id_anterior + 1,
+        fecha: fechaticket,
+        id_mesa: 0,
+        nombre_camarero: "camarero3",
+        comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        total: 0,
+        pagado: false,
+    };
+    ticketsLista.push(ticket);
+    subir("ticket", JSON.stringify(ticketsLista));
+}
+
 //Inicializamos datos basicos para el restaurante: menu, mesa y camareros
 function iniciar() {
     var listaCamareros = [];
@@ -25,7 +60,7 @@ function iniciar() {
             numero: `${i}`,
             estado: 'cerrada',
             id_camarero: 0,
-            comanda: {}
+            comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
         listaMesas.push(mesa);
     }
@@ -39,10 +74,9 @@ function iniciar() {
     subir('menu', JSON.stringify(menu));
 }
 
-//Desplegables del Menu
+//Iniciar desplegables del Menu
 function iniciarDesplegables() {
     var menu = JSON.parse(localStorage.getItem('menu'));
-    console.log(menu);
     var desplegables = document.getElementsByClassName('m_desplegables');
 
     let i = 0;
@@ -121,7 +155,6 @@ function sumarYRestar() {
             } else {
                 spanCantidad[i].innerHTML = numero;
             }
-
         });
         sumar[i].addEventListener('click', () => {
             let numero = parseInt(spanCantidad[i].innerHTML);
@@ -132,28 +165,86 @@ function sumarYRestar() {
 
 //Añadir pedidos a la comanda
 function añadirComanda() {
+    //Recoger mesaActual
+    var mesa = JSON.parse(localStorage.getItem('mesa'));
+    // localStorage.setItem('mesaActual', 1);
+    var mesaActual = parseInt(localStorage.getItem('mesaActual'));
+    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + mesaActual;
+    document.querySelector('#m_cerrarMesa').innerHTML = 'Cerrar Mesa' + ' ' + mesaActual;
+    var comanda = mesa[mesaActual].comanda;
+
+    //Añadir cantidades
     var spanCantidad = document.getElementsByClassName('cantidad');
     var li = document.getElementsByTagName('li');
-    var articulo = document.getElementsByClassName('articulo');
-    var comanda = [{}];
 
     var añadir = document.getElementById('m_añadir');
     añadir.addEventListener('click', () => {
         for (let i = 0; i < li.length; i++) {
             let cantidad = spanCantidad[i].innerHTML;
             if (cantidad > 0) {
-                console.log(cantidad);
-                console.log(articulo[i].innerHTML);
-                comanda.push({'articulo': articulo[i].innerHTML, 'cantidad': cantidad});
-                console.log(comanda);
+                comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
+                spanCantidad[i].innerHTML = 0;
             }
         }
+        mesa[mesaActual].comanda = comanda;
+        localStorage.setItem('mesa', JSON.stringify(mesa));
     });
+    return [mesa, mesaActual]
 }
+
+//funcion desplegables para reutilizar en los clicks
+function desplegar(desplegable) {
+    let display = desplegable.style.display;
+    if (display == 'none') {
+        desplegable.style.display = 'block';
+    } else {
+        desplegable.style.display = 'none';
+    }
+}
+
+//Cerrar Mesa
+function cerrarMesa(mesa, mesaActual) {
+    var ticket = JSON.parse(localStorage.getItem('ticket'));
+    var menu = JSON.parse(localStorage.getItem('menu'));
+    ticket.id_mesa = mesaActual;
+    ticket.comanda = mesa[mesaActual].comanda;
+
+    for (let i = 0; i < mesa[mesaActual].comanda.length; i++){
+        ticket.total += mesa[mesaActual].comanda[i] * menu.precio[i];
+    }
+
+    subir('ticket', JSON.stringify(ticket));
+    guardarTicket();
+    // iniciarTicket()
+
+    mesa[mesaActual].estado = 'cerrada';
+    mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    localStorage.setItem('mesa', JSON.stringify(mesa));
+}
+
 
 window.addEventListener('load', () => {
     iniciar();
+    iniciarTicket();
     iniciarDesplegables();
     sumarYRestar();
-    añadirComanda()
+    var añadir = añadirComanda();
+
+    var cerrar = document.querySelector('#m_cerrarMesa');
+    cerrar.addEventListener('click', () => {
+        cerrarMesa(añadir[0], añadir[1]);
+    });
+
+    //Estilo desplegable
+    var desplegables = document.getElementsByClassName('m_desplegables');
+    var opciones = document.querySelectorAll('.m_opciones h2');
+    for (let i = 0; i < opciones.length; i++) {
+        opciones[i].addEventListener('click', () => {
+            desplegar(desplegables[i]);
+        });
+    }
 });
+
+
+
+//Guardar id ticket, comanda mesa actual, 

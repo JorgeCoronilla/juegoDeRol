@@ -1,7 +1,36 @@
-/* .m_desplegables{
-    display: none;
-} */
+body {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
 
-li{
+section{
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div{
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+div h2{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.m_desplegables {
+    display: none;
+}
+
+li {
     list-style: none;
 }
