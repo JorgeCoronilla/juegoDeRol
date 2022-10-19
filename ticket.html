@@ -6,9 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body onload="imprimirTicket(localStorage.ticketSeleccionado)">
+    <header id="t_header">
+        <h4 id="t_nombre">Ticket</h4>
+        <h4><a href="index.html">Salir</a></h4>
+    </header>
     <div id="t_head">
         <h1>Cafeteria THE BRIDGE</h1>
         <h3>The bridge Academy</h3>
@@ -16,12 +21,21 @@
         <p>Madrid. España.</p>
     </div>
     <div id="t_body">
-        <p>Le atendió:</p><p id="t_nombreCamarero"></p>
-        <p><strong> Id Ticket:</strong></p><p id="t_id_ticket"></p>
-        <p><strong> Mesa nº:</strong></p><p id="t_id_mesa"></p>
+        <div class="t_fila">
+            <p>Le atendió:&nbsp </p>
+            <p id="t_nombreCamarero"></p>
+        </div>
+        <div class="t_fila">
+            <p><strong> Id Ticket:&nbsp</strong></p>
+            <p id="t_id_ticket"></p>
+        </div>
+        <div class="t_fila">
+            <p><strong> Mesa nº:&nbsp </strong></p>
+            <p id="t_id_mesa"></p>
+        </div>
         <table id="t_tabla">
             <tr>
-                <th style="width: 240px;">Articulo</th>
+                <th style="width: 240px;">Articulos</th>
                 <th>Cant.</th>
                 <th>Precio</th>
                 <th>Total</th>
@@ -31,8 +45,12 @@
             <p><strong> Total a pagar: </strong></p>
             <p id="t_total"></p>
         </div>
+        <p>* Todos los precios incluyen IVA (10%)</p>
     </div>
-    <button id="t_pagar" onclick="pagar()">Pagar con tarjeta</button>
+    <div id="t_pagar">
+        <button onclick="window.location='pago.html'">Pagar con tarjeta</button>
+    </div>
 </body>
 <script src="script.js"></script>
+
 </html>
