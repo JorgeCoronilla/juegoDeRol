@@ -4,9 +4,56 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Area</title>
+    <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
-    
+    <h1>Admin área</h1>
+    <div id="a_gestion">
+        <h2>Gestión de camareros</h2>
+        <div id="a_tabla">
+            <div class="a_tablaH">
+                <p></p>
+                <p>Nombre</p>
+                <p>Password</p>
+                <p>Rendimiento</p>
+            </div>
+            <div class="a_tablaR">
+                <p class="a_ids">ID 1: </p>
+                <input type="text" class="userName">
+                <input type="text" class="userPass">
+                <p class="a_rendimiento"> X MESAS SERVIDAS</p>
+            </div>
+            <div class="a_tablaR">
+                <p class="a_ids">ID 2: </p>
+                <input type="text" class="userName">
+                <input type="text" class="userPass">
+                <p class="a_rendimiento"> X MESAS SERVIDAS</p>
+            </div>
+            <div class="a_tablaR">
+                <p class="a_ids">ID 3: </p>
+                <input type="text" class="userName">
+                <input type="text" class="userPass">
+                <p class="a_rendimiento"> X MESAS SERVIDAS</p>
+            </div>
+            <div class="a_tablaR">
+                <p class="a_ids">ID 4: </p>
+                <input type="text" class="userName">
+                <input type="text" class="userPass">
+                <p class="a_rendimiento"> X MESAS SERVIDAS</p>
+            </div>
+            <button onclick="mostrarDatos()">Mostrar datos</button>      
+            <button onclick="guardarCambios()">Guardar cambios</button>
+        </div>
+    </div>
+    <div id="a_resultados">
+        <h2>Resumen del mes</h2>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
