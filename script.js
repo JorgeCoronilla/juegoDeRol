@@ -101,7 +101,7 @@ function iniciar() {
         }
         listaMesas.push(mesa);
     }
-    
+
     subir("mesa", JSON.stringify(listaMesas));
 
     var menu = {
@@ -141,7 +141,7 @@ function iniciarSesion() {
         if (!loginok) { alert("Usuario y/o contraseña incorrecta") }
     }
 }
-function iniciarTicket() {
+/* function iniciarTicket() {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes()
     var ticket = {
@@ -154,7 +154,7 @@ function iniciarTicket() {
         pagado: false,
     }
     subir("ticket", JSON.stringify(ticket))
-}
+} */
 
 
 function imprimirTicket(id_ticket_entrada) {
@@ -165,16 +165,17 @@ function imprimirTicket(id_ticket_entrada) {
     console.log(precios)
     let ticketsLista = JSON.parse(localStorage.ticket);
     console.log("Lista de todos los tickets: " + ticketsLista)
-    let ticket = ticketsLista.filter((element) => { 
-        if(element.id_ticket == id_ticket_entrada){
+    let ticket = ticketsLista.filter((element) => {
+        if (element.id_ticket == id_ticket_entrada) {
             return element
-        } })
-    console.log("ticket: "+ ticket)
+        }
+    })
+    console.log("ticket: " + ticket)
     let comanda = ticket[0].comanda;
     console.log(comanda)
     var totalCuenta = 0;
-    for(let i=0;i<comanda.length;i++){
-        if(comanda[i]>0){
+    for (let i = 0; i < comanda.length; i++) {
+        if (comanda[i] > 0) {
             var fila = document.createElement("tr");
             var articulo = document.createElement("td");
             var precio = document.createElement("td");
@@ -183,13 +184,13 @@ function imprimirTicket(id_ticket_entrada) {
             articulo.innerHTML = articulos[i];
             precio.innerHTML = precios[i];
             cant.innerHTML = comanda[i];
-            total.innerHTML = comanda[i]*precios[i];
+            total.innerHTML = comanda[i] * precios[i];
             fila.appendChild(articulo);
             fila.appendChild(cant);
             fila.appendChild(precio);
             fila.appendChild(total);
             tabla.appendChild(fila);
-            totalCuenta+=(comanda[i]*precios[i]);
+            totalCuenta += (comanda[i] * precios[i]);
         }
     }
     var p_total = document.getElementById("t_total");
@@ -245,10 +246,10 @@ function camareroIn() {
 }
 
 
-function borra () {
-    var mesasA =document.querySelector('.c_cpntainer1');
-    var mesasC =document.querySelector('.c_cpntainer2');
-    var mesasR =document.querySelector('.c_cpntainer3');
+function borra() {
+    var mesasA = document.querySelector('.c_cpntainer1');
+    var mesasC = document.querySelector('.c_cpntainer2');
+    var mesasR = document.querySelector('.c_cpntainer3');
     borrarChild(mesasA);
     borrarChild(mesasC);
     borrarChild(mesasR);
@@ -256,7 +257,7 @@ function borra () {
 //CARGA LA INFO EN EL HTML CAMARERO: MESAS ABIERTAS/OCUPADAS Y LIBRES
 function cargarMesas(camareroActual, mesas) {
     //BORRA MESAS ANTERIORES PARA ACTUALIZAR
-        borra();
+    borra();
     for (let i = 0; i < 10; i++) {
         //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
         if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual.id_camarero) {
@@ -267,7 +268,7 @@ function cargarMesas(camareroActual, mesas) {
             divMesa.appendChild(numero);
             document.querySelector('.c_cpntainer1').appendChild(divMesa);
         }
-        
+
         //FILTRA MESAS DISPONIBLES Y LAS PINTA
         if (mesas[i].estado == 'cerrada') {
             var divMesa = document.createElement('button');
@@ -278,8 +279,8 @@ function cargarMesas(camareroActual, mesas) {
             document.querySelector('.c_cpntainer2').appendChild(divMesa);
         }
 
-         //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
-         if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual.id_camarero) {
+        //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual.id_camarero) {
             var divMesa = document.createElement('button');
             divMesa.className = `c_mesasR`;
             var numero = document.createTextNode(mesas[i].numero);
@@ -291,44 +292,44 @@ function cargarMesas(camareroActual, mesas) {
 }
 
 //ENVÍA LA MESA A MESA.HTML
-    function checkMesa(indice, camareroActual){
-        var mesasArriba = JSON.parse(bajar('mesa'));
-        mesasArriba[indice].estado = 'abierta';
-        mesasArriba[indice].id_camarero = camareroActual.id_camarero;
-        subir('mesa', JSON.stringify(mesasArriba));
-        camareroIn();
-        enviaMesa(indice)
-    }
+function checkMesa(indice, camareroActual) {
+    var mesasArriba = JSON.parse(bajar('mesa'));
+    mesasArriba[indice].estado = 'abierta';
+    mesasArriba[indice].id_camarero = camareroActual.id_camarero;
+    subir('mesa', JSON.stringify(mesasArriba));
+    camareroIn();
+    enviaMesa(indice)
+}
 
-    function enviaMesa(indice){
-        subir('mesaActual', indice);
-        window.location="mesa.html"
-    }
-    function historial(camareroActual) {
-        var tickets= JSON.parse(bajar('ticket'));
-        console.log("Entra en tickets");
-        console.log(tickets);
-        console.log(camareroActual);
-        console.log(camareroActual.nombre_camarero)
-        for (let i=0;i<tickets.length;i++) {
-            console.log(tickets[i].nombre_camarero)
-            if (tickets[i].nombre_camarero == camareroActual.nombre_camarero) {
-                var idTicket = parseInt(tickets[i].id_ticket)
-                var botonTicket = document.createElement('button');
-                botonTicket.className = `c_ticket`;
-                botonTicket.addEventListener('click', () => { imprimirTicket(idTicket); })
-                var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}` );
-                botonTicket.appendChild(id);
-                document.querySelector('c_historial').appendChild(botonTicket);
-            }
+function enviaMesa(indice) {
+    subir('mesaActual', indice);
+    window.location = "mesa.html"
+}
+function historial(camareroActual) {
+    var tickets = JSON.parse(bajar('ticket'));
+    console.log("Entra en tickets");
+    console.log(tickets);
+    console.log(camareroActual);
+    console.log(camareroActual.nombre_camarero)
+    for (let i = 0; i < tickets.length; i++) {
+        console.log(tickets[i].nombre_camarero)
+        if (tickets[i].nombre_camarero == camareroActual.nombre_camarero) {
+            var idTicket = parseInt(tickets[i].id_ticket)
+            var botonTicket = document.createElement('button');
+            botonTicket.className = `c_ticket`;
+            botonTicket.addEventListener('click', () => { imprimirTicket(idTicket); })
+            var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}`);
+            botonTicket.appendChild(id);
+            document.querySelector('c_historial').appendChild(botonTicket);
         }
     }
+}
 
-    function borrarChild(parent) {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
+function borrarChild(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
+}
 
 
 //Iniciar desplegables del Menu
@@ -458,33 +459,65 @@ function desplegar(desplegable) {
         desplegable.style.display = 'none';
     }
 }
+//TICKET
+class Ticket {
+    constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado) {
+        this.id_ticket = id_ticket;
+        this.fecha = fecha;
+        this.id_mesa = id_mesa;
+        this.nombre_camarero = nombre_camarero;
+        this.comanda = comanda;
+        this.total = total;
+        this.pagado = pagado;
+    }
+
+    get ticketInfo() {
+        return "Dimension1: " + this.dimension1 + "\nDimension2" + this.dimension2 + "\n";
+    }
+    set ticketInfo(dimensiones) {
+        this.dimension1 = dimensiones[0];
+        this.dimension2 = dimensiones[1];
+    }
+
+}
 
 //Cerrar Mesa
 function cerrarMesa(mesa, mesaActual) {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
-    var ticketsLista = [JSON.parse(localStorage.getItem("ticket"))];
-    console.log(ticketsLista)
-    var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket;
+    var camareroActual = localStorage.getItem("camareroActual")
     var menu = JSON.parse(localStorage.getItem('menu'));
     var total = 0;
-    for (let i = 0; i < mesa[mesaActual].comanda.length; i++){
+    var pagado = false;
+    var ticketsLista = JSON.parse(localStorage.getItem("ticket"));
+    var inicioTicket = [];
+    for (let i = 0; i < mesa[mesaActual].comanda.length; i++) {
         total += mesa[mesaActual].comanda[i] * menu.precio[i];
     }
-    var ticket = {
-        id_ticket: id_anterior + 1,
-        fecha: fechaticket,
-        id_mesa: mesaActual,
-        nombre_camarero: "camarero3",
-        comanda: mesa[mesaActual].comanda,
-        total: total,
-        pagado: false,
-    };
-    ticketsLista.push(ticket)
-    subir("ticket", JSON.stringify(ticketsLista));
-    
-    // iniciarTicket()
-
+    /*     var p = new Puntuacion(date, aciertos);
+    var puntuaciones = [];
+    // recogemos la info del storage, le añadimos el ultimo resultado y volvemos a guardar
+    var historial = localStorage.getItem("historial");
+    if (!historial) {
+        puntuaciones.push(p);
+        localStorage.setItem("historial", JSON.stringify(puntuaciones));
+    } else {
+        historial = JSON.parse(historial);
+        historial.push(p);
+        localStorage.setItem("historial", JSON.stringify(historial));
+    } */
+    if (!ticketsLista) {
+        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        inicioTicket.push(newTicket);
+        localStorage.setItem("ticket", JSON.stringify(inicioTicket))
+    } else {
+        var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket + 1;
+        console.log(ticketsLista)
+        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        ticketsLista.push(newTicket);
+        localStorage.setItem("ticket", JSON.stringify(ticketsLista))
+    }
+    //constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado)
     mesa[mesaActual].estado = 'cerrada';
     mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     localStorage.setItem('mesa', JSON.stringify(mesa));
@@ -513,5 +546,8 @@ window.addEventListener('load', () => {
 
 
 
-
-//Guardar id ticket, comanda mesa actual, 
+//Ver comanda en el cuerpo de la Mesa Actual
+//Guardar id ticket, comanda mesa actual,
+// TICKETS.html == Imprimir el numero de mesa, camarero id tickets.
+// pago.html == crear la pasarela
+// admin.html == mostrar rendimiento camareros en grafica.
