@@ -99,7 +99,8 @@ function iniciar() {
             id_camarero: 0,
             comanda: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
-    
+        listaMesas.push(mesa);
+    }
     
     subir("mesa", JSON.stringify(listaMesas));
 
@@ -110,7 +111,7 @@ function iniciar() {
     }
     subir('menu', JSON.stringify(menu));
 }
-}
+
 
 
 function iniciarSesion() {
@@ -154,24 +155,7 @@ function iniciarTicket() {
     }
     subir("ticket", JSON.stringify(ticket))
 }
-function guardarTicket() {
-    var fecha = new Date;
-    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
-    var ticketsLista = [JSON.parse(localStorage.getItem("ticket"))];
-    console.log(ticketsLista)
-    var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket
-    var ticket = {
-        id_ticket: id_anterior + 1,
-        fecha: fechaticket,
-        id_mesa: 3,
-        nombre_camarero: "camarero3",
-        comanda: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        total: 546,
-        pagado: false,
-    };
-    ticketsLista.push(ticket)
-    subir("ticket", JSON.stringify(ticketsLista));
-}
+
 
 function imprimirTicket(id_ticket_entrada) {
     let tabla = document.getElementById("t_tabla");
@@ -179,13 +163,13 @@ function imprimirTicket(id_ticket_entrada) {
     console.log(articulos)
     let precios = JSON.parse(localStorage.menu).precio;
     console.log(precios)
-    let ticketsLista = JSON.parse(localStorage.getItem("ticket"));
-    console.log(ticketsLista)
+    let ticketsLista = JSON.parse(localStorage.ticket);
+    console.log("Lista de todos los tickets: " + ticketsLista)
     let ticket = ticketsLista.filter((element) => { 
         if(element.id_ticket == id_ticket_entrada){
             return element
         } })
-    console.log(ticket)
+    console.log("ticket: "+ ticket)
     let comanda = ticket[0].comanda;
     console.log(comanda)
     var totalCuenta = 0;
@@ -244,10 +228,10 @@ const config = {
     data: data,
     options: {}
 };
-const myChart = new Chart(
+/* const myChart = new Chart(
     document.getElementById('myChart'),
     config
-);
+); */
 
 
 //Baja datos de las mesas y camarero logueado - llama a la función que carga la info
@@ -318,7 +302,7 @@ function cargarMesas(camareroActual, mesas) {
 
     function enviaMesa(indice){
         subir('mesaActual', indice);
-
+        window.location="mesa.html"
     }
     function historial(camareroActual) {
         var tickets= JSON.parse(bajar('ticket'));
@@ -477,17 +461,28 @@ function desplegar(desplegable) {
 
 //Cerrar Mesa
 function cerrarMesa(mesa, mesaActual) {
-    var ticket = JSON.parse(localStorage.getItem('ticket'));
+    var fecha = new Date;
+    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
+    var ticketsLista = [JSON.parse(localStorage.getItem("ticket"))];
+    console.log(ticketsLista)
+    var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket;
     var menu = JSON.parse(localStorage.getItem('menu'));
-    ticket.id_mesa = mesaActual;
-    ticket.comanda = mesa[mesaActual].comanda;
-
+    var total = 0;
     for (let i = 0; i < mesa[mesaActual].comanda.length; i++){
-        ticket.total += mesa[mesaActual].comanda[i] * menu.precio[i];
+        total += mesa[mesaActual].comanda[i] * menu.precio[i];
     }
-
-    subir('ticket', JSON.stringify(ticket));
-    guardarTicket();
+    var ticket = {
+        id_ticket: id_anterior + 1,
+        fecha: fechaticket,
+        id_mesa: mesaActual,
+        nombre_camarero: "camarero3",
+        comanda: mesa[mesaActual].comanda,
+        total: total,
+        pagado: false,
+    };
+    ticketsLista.push(ticket)
+    subir("ticket", JSON.stringify(ticketsLista));
+    
     // iniciarTicket()
 
     mesa[mesaActual].estado = 'cerrada';
@@ -497,8 +492,6 @@ function cerrarMesa(mesa, mesaActual) {
 
 
 window.addEventListener('load', () => {
-    iniciar();
-    iniciarTicket();
     iniciarDesplegables();
     sumarYRestar();
     var añadir = añadirComanda();
