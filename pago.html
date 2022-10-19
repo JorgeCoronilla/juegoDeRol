@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de pago</title>
+</head>
+<body>
+    <div id="p_contenedor">
+        <h1>RedBros</h1>
+        <img src="https://e00-marca.uecdn.es/assets/multimedia/imagenes/2019/10/06/15703723600521.jpg" alt="" srcset="" height="80px" width="160px">
+        <h2>Total a pagar</h2>
+        <p id="p_total"></p>
+        <p>Introduzca el número de tarjeta:</p>
+        <input type="text" name="" id="num_tarjeta">
+        <p>Introduzca el nombre del titular:</p>
+        <input type="text" id="nombre_tarjeta">
+        <p>Caducidad</p>
+        <input type="number" placeholder="Mes" id="mes_tarjeta">
+        <input type="number" placeholder="Año" id="ano_tarjeta">
+        <p>CVV</p>
+        <input type="number" name="cvv" id="cvv">
+        <button onclick="checkPago()">Pagar</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
