@@ -76,6 +76,7 @@ function guardarTicket() {
 }
 
 //Inicializamos datos basicos para el restaurante: menu, mesa y camareros
+
 function iniciar() {
     var listaCamareros = [];
     for (let i = 1; i < 5; i++) {
@@ -141,7 +142,7 @@ function iniciarSesion() {
         if (!loginok) { alert("Usuario y/o contraseña incorrecta") }
     }
 }
-/* function iniciarTicket() {
+/*function iniciarTicket() {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes()
     var ticket = {
@@ -205,48 +206,84 @@ function imprimirTicket(id_ticket_entrada) {
 
 
 //---------------------------------------- GRAFICA RESULTADOS -------------------------------------------------------------------------------------
+function cargarGraficos(){
+var tickets= JSON.parse(bajar('ticket'))
+var camareros= JSON.parse(bajar('camarero'))
+var total = [], fechas = [], mesas = total.length
+var fechas1= [], total1 =[], mesas1= total1.length;
+var fechas2 =[], total2 =[], mesas2= total2.length;
+var fechas3=[], total3 =[], mesas3= total3.length;
+var fechas4=[], total4 =[], mesas4= total4.length;
+mesas1= total1.length
+for (let i=0;i<tickets.length;i++) {
+total.push(tickets[i].total)
+fechas.push(tickets[i].fechas)
+if (tickets[i].nombre_camarero=='0') {
+    total1.push(tickets[i].total)
+    fechas1.push(tickets[i].total)
+}
+if (tickets[i].nombre_camarero=='1') {
+    total2.push(tickets[i].total)
+    fechas2.push(tickets[i].total)
+}
+if (tickets[i].nombre_camarero=='2') {
+    total3.push(tickets[i].total)
+    fechas3.push(tickets[i].total)
+}
+if (tickets[i].nombre_camarero=='3') {
+    total4.push(tickets[i].total)
+    fechas4.push(tickets[i].total)
+}
+}
+/*
 const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-];
+    'total',
+    camareros[0].nombre_camarero,
+    camareros[1].nombre_camarero,
+    camareros[2].nombre_camarero,
+    camareros[3].nombre_camarero
+];*/
+const labels = [
+    'total',
+    camareros[0].nombre_camarero,
+    camareros[1].nombre_camarero,
+    camareros[2].nombre_camarero,
+    camareros[3].nombre_camarero
+  ];
 
-const data = {
+  const data = {
     labels: labels,
     datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10, 5, 2, 20, 30, 45],
+      label: 'Mesas servidas',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [mesas, mesas1, mesas2, mesas3, mesas4]
     }]
-};
+  };
 
-const config = {
-    type: 'bar',
+  const config = {
+    type: 'line',
     data: data,
     options: {}
-};
-/* const myChart = new Chart(
+  };
+
+  const myChart = new Chart(
     document.getElementById('myChart'),
     config
-); */
-
+  );
+}
 
 //Baja datos de las mesas y camarero logueado - llama a la función que carga la info
 function camareroIn() {
     var camareros = JSON.parse(bajar('camarero'));
-    var camareroActual = (camareros[1])
-    //var camareroActual = parseInt(camareroActual);
+    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
     var mesas = JSON.parse(bajar('mesa'));
-    document.getElementById('c_nombre').innerText = camareros[1].nombre_camarero
+    document.getElementById('c_nombre').innerText = camareros[camareroActual].nombre_camarero
     cargarMesas(camareroActual, mesas);
 }
 
 
-function borra() {
+function borraMesas() {
     var mesasA = document.querySelector('.c_cpntainer1');
     var mesasC = document.querySelector('.c_cpntainer2');
     var mesasR = document.querySelector('.c_cpntainer3');
@@ -257,7 +294,7 @@ function borra() {
 //CARGA LA INFO EN EL HTML CAMARERO: MESAS ABIERTAS/OCUPADAS Y LIBRES
 function cargarMesas(camareroActual, mesas) {
     //BORRA MESAS ANTERIORES PARA ACTUALIZAR
-    borra();
+    borraMesas();
     for (let i = 0; i < 10; i++) {
         //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
         if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual.id_camarero) {
@@ -288,7 +325,7 @@ function cargarMesas(camareroActual, mesas) {
             document.getElementsByClassName("c_cpntainer3")[0].appendChild(divMesa);
         }
     }
-    historial(camareroActual);
+    historial();
 }
 
 //ENVÍA LA MESA A MESA.HTML
@@ -305,22 +342,18 @@ function enviaMesa(indice) {
     subir('mesaActual', indice);
     window.location = "mesa.html"
 }
-function historial(camareroActual) {
-    var tickets = JSON.parse(bajar('ticket'));
-    console.log("Entra en tickets");
-    console.log(tickets);
-    console.log(camareroActual);
-    console.log(camareroActual.nombre_camarero)
+function historial() {
+    var tickets = JSON.parse(localStorage.ticket)
+    camareroActual=parseInt(localStorage.getItem('camareroActual'))
     for (let i = 0; i < tickets.length; i++) {
-        console.log(tickets[i].nombre_camarero)
-        if (tickets[i].nombre_camarero == camareroActual.nombre_camarero) {
+        if (tickets[i].nombre_camarero == camareroActual) {
             var idTicket = parseInt(tickets[i].id_ticket)
             var botonTicket = document.createElement('button');
             botonTicket.className = `c_ticket`;
             botonTicket.addEventListener('click', () => { imprimirTicket(idTicket); })
             var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}`);
             botonTicket.appendChild(id);
-            document.querySelector('c_historial').appendChild(botonTicket);
+            document.querySelector('#c_historial').appendChild(botonTicket);
         }
     }
 }
@@ -494,18 +527,6 @@ function cerrarMesa(mesa, mesaActual) {
     for (let i = 0; i < mesa[mesaActual].comanda.length; i++) {
         total += mesa[mesaActual].comanda[i] * menu.precio[i];
     }
-    /*     var p = new Puntuacion(date, aciertos);
-    var puntuaciones = [];
-    // recogemos la info del storage, le añadimos el ultimo resultado y volvemos a guardar
-    var historial = localStorage.getItem("historial");
-    if (!historial) {
-        puntuaciones.push(p);
-        localStorage.setItem("historial", JSON.stringify(puntuaciones));
-    } else {
-        historial = JSON.parse(historial);
-        historial.push(p);
-        localStorage.setItem("historial", JSON.stringify(historial));
-    } */
     if (!ticketsLista) {
         var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
         inicioTicket.push(newTicket);
@@ -517,7 +538,6 @@ function cerrarMesa(mesa, mesaActual) {
         ticketsLista.push(newTicket);
         localStorage.setItem("ticket", JSON.stringify(ticketsLista))
     }
-    //constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado)
     mesa[mesaActual].estado = 'cerrada';
     mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     localStorage.setItem('mesa', JSON.stringify(mesa));
