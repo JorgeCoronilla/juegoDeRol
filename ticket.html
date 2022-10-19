@@ -1,12 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ticket</title>
 </head>
+
 <body>
-    
+    <div id="t_head">
+        <h1>Cafeteria THE BRIDGE</h1>
+        <h3>The bridge Academy</h3>
+        <p>Paseo de Recoletos, 15.</p>
+        <p>Madrid. España.</p>
+    </div>
+    <div id="t_body">
+        <p>Le atendió:</p><p id="t_nombreCamarero"></p>
+        <p><strong> Id Ticket:</strong></p><p id="t_id_ticket"></p>
+        <p><strong> Mesa nº:</strong></p><p id="t_id_mesa"></p>
+        <table id="t_tabla">
+            <tr>
+                <th style="width: 240px;">Articulo</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+        </table>
+        <div>
+            <p><strong> Total a pagar: </strong></p>
+            <p id="t_total"></p>
+        </div>
+    </div>
 </body>
+<script src="script.js"></script>
 </html>
