@@ -311,35 +311,40 @@ function guardarCambios(){
 function cargarGraficos(num) {
 
     // DATOS -------------
+
     var tickets = JSON.parse(bajar('ticket'))
     var camareros = JSON.parse(bajar('camarero'))
-    var total = [], fechas = [], mesas = total.length
-    var fechas1 = [], total1 = [], mesas1 = total1.length;
-    var fechas2 = [], total2 = [], mesas2 = total2.length;
-    var fechas3 = [], total3 = [], mesas3 = total3.length;
-    var fechas4 = [], total4 = [], mesas4 = total4.length;
-    mesas1 = total1.length
+    var total = []
+    var total1 = []
+    var total2 = []
+    var total3 = []
+    var total4 = []
     for (let i = 0; i < tickets.length; i++) {
         total.push(tickets[i].total)
-        fechas.push(tickets[i].fechas)
-        if (tickets[i].nombre_camarero == '0') {
+        if (tickets[i].nombre_camarero == camareros[0].nombre_camarero) {
             total1.push(tickets[i].total)
-            fechas1.push(tickets[i].total)
         }
-        if (tickets[i].nombre_camarero == '1') {
+        if (tickets[i].nombre_camarero == camareros[1].nombre_camarero) {
             total2.push(tickets[i].total)
-            fechas2.push(tickets[i].total)
         }
-        if (tickets[i].nombre_camarero == '2') {
+        if (tickets[i].nombre_camarero == camareros[2].nombre_camarero) {
             total3.push(tickets[i].total)
-            fechas3.push(tickets[i].total)
         }
-        if (tickets[i].nombre_camarero == '3') {
+        if (tickets[i].nombre_camarero == camareros[3].nombre_camarero) {
             total4.push(tickets[i].total)
-            fechas4.push(tickets[i].total)
         }
     }
-
+    var mesas = total.length
+    var mesas1 = total1.length
+    var mesas2 = total2.length
+    var mesas3 = total3.length
+    var mesas4 = total4.length
+    var sTotal=total.reduce(function(a, b){return a + b});
+    var sTotal1=total1.reduce(function(a, b){return a + b});
+    var sTotal2=total2.reduce(function(a, b){return a + b});
+    var sTotal3=total3.reduce(function(a, b){return a + b});
+    var sTotal4=total4.reduce(function(a, b){return a + b});
+    
     /*---- Config graficas ----*/
     const labels = [
         'total',
@@ -353,152 +358,64 @@ function cargarGraficos(num) {
         labels: labels,
         datasets: [{
             label: 'Mesas servidas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'blcak',
+            borderColor: 'blcak',
             data: [mesas, mesas1, mesas2, mesas3, mesas4]
         }]
     };
 
     const config = {
-        type: 'line',
-        data: data,
+        type: 'bar',
+        data: data, min: 0,
         options: {}
     };
 
-
     const labels1 = [
-        fechas1
+        'total',
+        camareros[0].nombre_camarero,
+        camareros[1].nombre_camarero,
+        camareros[2].nombre_camarero,
+        camareros[3].nombre_camarero
     ];
-    const DATA_COUNT1 = 4;
+    const DATA_COUNT1 = 5;
     const data1 = {
         labels: labels1,
         datasets: [{
-            label: camareros[0].nombre_camarero,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: total1
+            label: 'Importe total',
+            backgroundColor: 'black',
+            borderColor: 'black',
+            data: [sTotal, sTotal1, sTotal2, sTotal3, sTotal4]
         }]
     };
 
     const config1 = {
-        type: 'line',
-        data: data1,
+        type: 'bar',
+        data: data1, min: 0,
         options: {}
     };
 
-    const labels2 = [
-        fechas2];
-    const DATA_COUNT2 = 4;
-    const data2 = {
-        labels: labels2,
-        datasets: [{
-            label: camareros[1].nombre_camarero,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: total2
-        }]
-    };
-
-    const config2 = {
-        type: 'line',
-        data: data2,
-        options: {}
-    };
-
-    const labels3 = [
-        fechas3];
-    const DATA_COUNT3 = 4;
-    const data3 = {
-        labels: labels3,
-        datasets: [{
-            label: camareros[2].nombre_camarero,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: total3
-        }]
-    };
-
-    const config3 = {
-        type: 'line',
-        data: data3,
-        options: {}
-    };
-
-    const labels4 = [
-        fechas4];
-    const DATA_COUNT4 = 4;
-    const data4 = {
-        labels: labels4,
-        datasets: [{
-            label: camareros[3].nombre_camarero,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: total4
-        }]
-    };
-
-    const config4 = {
-        type: 'line',
-        data: data4,
-        options: {}
-    };
-
-
-    switch (num) {
-        case 0:
-            document.getElementById('a_resultados').innerHTML = ""
-            var canvas = document.createElement('canvas')
-            canvas.setAttribute('id', 'myChart')
-            document.getElementById('a_resultados').append(canvas)
-            const myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
-
-
-            break;
-        case 1:
-            document.getElementById('a_resultados').innerHTML = ""
-            var canvas = document.createElement('canvas')
-            canvas.setAttribute('id', 'myChart1')
-            document.getElementById('a_resultados').append(canvas)
-            const myChart1 = new Chart(
-                document.getElementById('myChart1'),
-                config1
-            );
-
-            break;
-        case 2:
-            document.getElementById('a_resultados').innerHTML = ""
-            var canvas = document.createElement('canvas')
-            canvas.setAttribute('id', 'myChart2')
-            document.getElementById('a_resultados').append(canvas)
-            const myChart2 = new Chart(
-                document.getElementById('myChart2'),
-                config2
-            );
-            break;
-        case 3:
-            document.getElementById('a_resultados').innerHTML = ""
-            var canvas = document.createElement('canvas')
-            canvas.setAttribute('id', 'myChart3')
-            document.getElementById('a_resultados').append(canvas)
-            const myChart3 = new Chart(
-                document.getElementById('myChart3'),
-                config3
-            );
-            break;
-        case 4:
-            document.getElementById('a_resultados').innerHTML = ""
-            var canvas = document.createElement('canvas')
-            canvas.setAttribute('id', 'myChart4')
-            document.getElementById('a_resultados').append(canvas)
-            const myChart4 = new Chart(
-                document.getElementById('myChart4'),
-                config4
-            );
-            break;
-    }
+            switch (num) {
+                case 0:
+                    document.getElementById('a_resultados').innerHTML = ""
+                    var canvas = document.createElement('canvas')
+                    canvas.setAttribute('id', 'myChart')
+                    document.getElementById('a_resultados').append(canvas)
+                    const myChart = new Chart(
+                        document.getElementById('myChart'),
+                        config
+                    );
+        
+                    break;
+                case 1:
+                    document.getElementById('a_resultados').innerHTML = ""
+                    var canvas = document.createElement('canvas')
+                    canvas.setAttribute('id', 'myChart1')
+                    document.getElementById('a_resultados').append(canvas)
+                    const myChart1 = new Chart(
+                        document.getElementById('myChart1'),
+                        config1
+                    );
+            }
 
 }
 
@@ -572,14 +489,19 @@ function enviaMesa(indice) {
     window.location = "mesa.html"
 }
 function historial() {
-    var tickets = JSON.parse(localStorage.ticket)
-    camareroActual = parseInt(localStorage.getItem('camareroActual'))
+    var tickets = JSON.parse(localStorage.ticket);
+    var camareros = JSON.parse(bajar('camarero'));
+    var camareroActual = parseInt(localStorage.getItem("camareroActual"))
+
     for (let i = 0; i < tickets.length; i++) {
-        if (tickets[i].nombre_camarero == camareroActual) {
-            var idTicket = parseInt(tickets[i].id_ticket)
+        if (tickets[i].nombre_camarero == camareros[camareroActual-1].nombre_camarero) {
+            var idTicket = tickets[i].id_ticket
+            console.log(idTicket)
             var botonTicket = document.createElement('button');
             botonTicket.className = `c_ticket`;
-            botonTicket.addEventListener('click', () => { imprimirTicket(idTicket); })
+            botonTicket.addEventListener('click', () => { 
+                consulta_ticket(idTicket);
+            window.location="ticket.html" })
             var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}`);
             botonTicket.appendChild(id);
             document.querySelector('#c_historial').appendChild(botonTicket);
