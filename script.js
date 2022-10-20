@@ -556,7 +556,7 @@ function sumarYRestar() {
 }
 
 //Añadir pedidos a la comanda
-function añadirComanda() {
+function adicionarComanda() {
     //Recoger mesaActual
     var mesa = JSON.parse(localStorage.getItem('mesa'));
     // localStorage.setItem('mesaActual', 1);
@@ -700,19 +700,19 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
     let mesasAtendidas =  JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
     users[localStorage.camareroActual-1].mesasAtendidas = mesasAtendidas +1;
     localStorage.setItem("camarero", JSON.stringify(users))
-
 }
 
 
 function iniciarMesa(){
     iniciarDesplegables();
     sumarYRestar();
-    var añadir = añadirComanda();
-    verComanda(añadir[0], añadir[1]);
+    var add = adicionarComanda();
+    verComanda(add[0], add[1]);
 
     var cerrar = document.querySelector('#m_cerrarMesa');
     cerrar.addEventListener('click', () => {
-        cerrarMesa(añadir[0], añadir[1], añadir[2]);
+        cerrarMesa(add[0], add[1], add[2]);
+
     });
 
     //Estilo desplegable
