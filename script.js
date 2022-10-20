@@ -346,12 +346,12 @@ function cargarGraficos(num) {
     
     var tickets = JSON.parse(bajar('ticket'))
     var camareros = JSON.parse(bajar('camarero'))
-    var total = []
-    var total1 = []
-    var total2 = []
-    var total3 = []
-    var total4 = []
-    var mesas = 0, mesas1 = 0, mesas2 = 0, mesas3 = 0, mesas4 = 0
+    var total = [0]
+    var total1 = [0]
+    var total2 = [0]
+    var total3 = [0]
+    var total4 = [0]
+    var mesas = 0, mesas1 = 0, mesas2 = 0, mesas3 = 0, mesas4 = 0;
     var sTotal = 0, sTotal1 = 0, sTotal2 = 0, sTotal3 = 0, sTotal4 = 0; 
     if(tickets != null) {
     for (let i = 0; i < tickets.length; i++) {
@@ -369,16 +369,16 @@ function cargarGraficos(num) {
             total4.push(tickets[i].total)
         }
     }
-    var mesas = total.length
-    var mesas1 = total1.length
-    var mesas2 = total2.length
-    var mesas3 = total3.length
-    var mesas4 = total4.length
-    var sTotal = total.reduce(function (a, b) { return a + b });
-    var sTotal1 = total1.reduce(function (a, b) { return a + b });
-    var sTotal2 = total2.reduce(function (a, b) { return a + b });
-    var sTotal3 = total3.reduce(function (a, b) { return a + b });
-    var sTotal4 = total4.reduce(function (a, b) { return a + b });
+    mesas = total.length-1
+    mesas1 = total1.length-1
+    mesas2 = total2.length-1
+    mesas3 = total3.length-1
+    mesas4 = total4.length-1
+    sTotal = total.reduce(function (a, b) { return a + b });
+    sTotal1 = total1.reduce(function (a, b) { return a + b });
+    sTotal2 = total2.reduce(function (a, b) { return a + b });
+    sTotal3 = total3.reduce(function (a, b) { return a + b });
+    sTotal4 = total4.reduce(function (a, b) { return a + b });
 } else {
     document.getElementById('a_resultados').innerHTML = "No hay datos"
 }
