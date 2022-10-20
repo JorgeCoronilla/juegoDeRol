@@ -76,6 +76,7 @@ function guardarTicket() {
 }
 
 //Inicializamos datos basicos para el restaurante: menu, mesa y camareros
+
 function iniciar() {
     if (localStorage.length == 0) {
         var listaCamareros = [];
@@ -85,7 +86,7 @@ function iniciar() {
                 nombre_camarero: `camarero${i}`,
                 password: "1234",
                 mesasActuales: {},
-                mesasAtendidas: {}
+                mesasAtendidas: 0
             }
             listaCamareros.push(camarero);
         }
@@ -107,7 +108,7 @@ function iniciar() {
 
         var menu = {
             "id_articulo": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            'nombre': ['tinto', 'blanco', 'cerveza', 'refresco', 'zumo', 'café', 'café especial', 'gazpacho', 'ensalada mixta', 'ensaladilla', 'lasaña', 'puré de verduras', 'secreto ibérico', 'escalope de pollo', 'bacalao a la riojana', 'hamburguesa', 'tarta de queso', 'fruta del tiempo', 'flan de la casa', 'tarta de la abuela', 'Varios'],
+            'nombre': ['Vino tinto', 'Vino blanco', 'Cerveza', 'Refresco', 'Zumo', 'Café', 'Café especial', 'Gazpacho', 'Ensalada mixta', 'Ensaladilla', 'Lasaña', 'Puré de verduras', 'Secreto ibérico', 'Escalope de pollo', 'Bacalao a la riojana', 'Hamburguesa', 'Tarta de queso', 'Fruta del tiempo', 'Flan de la casa', 'Tarta de la abuela', 'Varios'],
             'precio': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
         }
         subir('menu', JSON.stringify(menu));
@@ -145,6 +146,7 @@ function iniciarSesion() {
     }
 }
 
+
 // Funcion para que el cliente pueda ver el ticket de su consumicion y pagarlo.
 
 function imprimirTicket(id_ticket_entrada) {
@@ -172,6 +174,7 @@ function imprimirTicket(id_ticket_entrada) {
             var cant = document.createElement("td");
             var total = document.createElement("td");
             articulo.innerHTML = articulos[i];
+            articulo.setAttribute("class", "t_articulos")
             precio.innerHTML = precios[i];
             cant.innerHTML = comanda[i];
             total.innerHTML = comanda[i] * precios[i];
@@ -190,7 +193,7 @@ function imprimirTicket(id_ticket_entrada) {
     var p_id_ticket = document.getElementById("t_id_ticket");
     p_id_ticket.innerText = ticket[0].id_ticket;
     var p_id_mesa = document.getElementById("t_id_mesa");
-    p_id_mesa.innerText = ticket[0].id_mesa;
+    p_id_mesa.innerText = ticket[0].id_mesa + 1;
 }
 
 function consulta_ticket(id_ticket) {
@@ -200,10 +203,16 @@ function consulta_ticket(id_ticket) {
 
 
 // ---------------------------------------PASARELA DE PAGO -----------------------------------
-function pagar() {
+
+function cargarPago() {
     var ticketSeleccionado = localStorage.ticketSeleccionado
-    console.log(ticketSeleccionado)
-    var precio = JSON.parse(localStorage.ticket)[ticketSeleccionado].total
+    var tickets = JSON.parse(localStorage.ticket)
+    var pagado = tickets[ticketSeleccionado].pagado;
+    if (pagado) {
+        alert("Esta cuenta está pagada. muchas gracias");
+        window.location = "index.html"
+    }
+    var precio = tickets[ticketSeleccionado].total
     console.log(precio)
     var p_total = document.getElementById("p_total")
     p_total.innerText = precio + "€"
@@ -219,6 +228,13 @@ function checkPago() {
     console.log((visa.match(/^4\d{3}-?\d{4}-?\d{4}-?\d{4}$/)))
     console.log((visa.match(/^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/)))
     var nombre = document.getElementById("nombre_tarjeta").value;
+    var ticketSeleccionado = localStorage.ticketSeleccionado
+    var tikets = JSON.parse(localStorage.ticket)
+    var pagado = tikets[ticketSeleccionado].pagado;
+    if (pagado) {
+        alert("Esta cuenta está pagada. muchas gracias");
+        window.location = "index.html"
+    }
     if (!nombre.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
         alert("El nombre introducido no es válido.");
         validation = false;
@@ -243,34 +259,80 @@ function checkPago() {
     if (validation && validationCard) {
         alert("Operación finalizada con éxito.")
         window.location = "index.html"
+        pagado = true;
     }
-
+    tikets[ticketSeleccionado].pagado = pagado;
+    localStorage.setItem("ticket", JSON.stringify(tikets))
 }
 // ---------------------------------------------- FUNCIONES ADMIN -------------------------------------
 
 function mostrarDatos() {
     let users = JSON.parse(localStorage.camarero);
+    let rendimiento = document.getElementsByClassName("a_rendimiento")
     let username = users.map(element => element.nombre_camarero);
     let password = users.map(element => element.password);
     var placeholders_name = document.getElementsByClassName("userName");
     var placeholders_pass = document.getElementsByClassName("userPass");
     console.log(placeholders_name)
     console.log(placeholders_pass)
+    var mesas = JSON.parse(localStorage.mesa)
+    console.log(mesas)
+    console.log(username)
+
+    var mesasAtendidas1 = []
+    for (let i = 0; i < 10; i++) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 1) {
+            mesasAtendidas1.push(mesas[i].numero)
+        }
+    }
+    var mesasAtendidas2 = []
+    for (let i = 0; i < 10; i++) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 2) {
+            mesasAtendidas2.push(mesas[i].numero)
+        }
+    }
+    var mesasAtendidas3 = []
+    for (let i = 0; i < 10; i++) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 3) {
+            mesasAtendidas3.push(mesas[i].numero)
+        }
+    }
+    var mesasAtendidas4 = []
+    for (let i = 0; i < 10; i++) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 4) {
+            mesasAtendidas4.push(mesas[i].numero)
+        }
+    }
+
     for (let i = 0; i < placeholders_name.length; i++) {
-        placeholders_name[i].placeholder = username[i];
-        placeholders_pass[i].placeholder = password[i];
-    };
+        placeholders_name[i].value = username[i];
+        placeholders_pass[i].value = password[i];
+
+    }
+    rendimiento[0].innerHTML = mesasAtendidas1;
+    rendimiento[1].innerHTML = mesasAtendidas2;
+    rendimiento[2].innerHTML = mesasAtendidas3;
+    rendimiento[3].innerHTML = mesasAtendidas4;
 }
-function guardarCambios(){
-    var name = document.getElementsByClassName("userName").value;
-    var pass = document.getElementsByClassName("userPass").value;
+function guardarCambios() {
     var placeholders_name = document.getElementsByClassName("userName");
     var placeholders_pass = document.getElementsByClassName("userPass");
+    var names = [];
+    var pass = [];
     let users = JSON.parse(localStorage.camarero);
     for (let i = 0; i < placeholders_name.length; i++) {
-        placeholders_name[i].placeholder = username[i];
-        placeholders_pass[i].placeholder = password[i];
+        names.push(placeholders_name[i].value);
+        pass.push(placeholders_pass[i].value);
     };
+    console.log(names)
+    console.log(pass)
+    console.log(users)
+    for (let k = 0; k < placeholders_name.length; k++) {
+        users[k].nombre_camarero = names[k];
+        users[k].password = pass[k];
+    };
+    console.log(users)
+    localStorage.setItem("camarero", JSON.stringify(users))
 }
 
 
@@ -278,48 +340,129 @@ function guardarCambios(){
 
 
 //---------------------------------------- GRAFICA RESULTADOS -------------------------------------------------------------------------------------
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-];
+function cargarGraficos(num) {
 
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-};
+    // DATOS -------------
 
-const config = {
-    type: 'bar',
-    data: data,
-    options: {}
-};
-/* const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-); */
+    var tickets = JSON.parse(bajar('ticket'))
+    var camareros = JSON.parse(bajar('camarero'))
+    var total = []
+    var total1 = []
+    var total2 = []
+    var total3 = []
+    var total4 = []
+    for (let i = 0; i < tickets.length; i++) {
+        total.push(tickets[i].total)
+        if (tickets[i].nombre_camarero == camareros[0].nombre_camarero) {
+            total1.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == camareros[1].nombre_camarero) {
+            total2.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == camareros[2].nombre_camarero) {
+            total3.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == camareros[3].nombre_camarero) {
+            total4.push(tickets[i].total)
+        }
+    }
+    var mesas = total.length
+    var mesas1 = total1.length
+    var mesas2 = total2.length
+    var mesas3 = total3.length
+    var mesas4 = total4.length
+    var sTotal = total.reduce(function (a, b) { return a + b });
+    var sTotal1 = total1.reduce(function (a, b) { return a + b });
+    var sTotal2 = total2.reduce(function (a, b) { return a + b });
+    var sTotal3 = total3.reduce(function (a, b) { return a + b });
+    var sTotal4 = total4.reduce(function (a, b) { return a + b });
 
+    /*---- Config graficas ----*/
+    const labels = [
+        'total',
+        camareros[0].nombre_camarero,
+        camareros[1].nombre_camarero,
+        camareros[2].nombre_camarero,
+        camareros[3].nombre_camarero
+    ];
+    const DATA_COUNT = 4;
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Mesas servidas',
+            backgroundColor: 'blcak',
+            borderColor: 'blcak',
+            data: [mesas, mesas1, mesas2, mesas3, mesas4]
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data, min: 0,
+        options: {}
+    };
+
+    const labels1 = [
+        'total',
+        camareros[0].nombre_camarero,
+        camareros[1].nombre_camarero,
+        camareros[2].nombre_camarero,
+        camareros[3].nombre_camarero
+    ];
+    const DATA_COUNT1 = 5;
+    const data1 = {
+        labels: labels1,
+        datasets: [{
+            label: 'Importe total',
+            backgroundColor: 'black',
+            borderColor: 'black',
+            data: [sTotal, sTotal1, sTotal2, sTotal3, sTotal4]
+        }]
+    };
+
+    const config1 = {
+        type: 'bar',
+        data: data1, min: 0,
+        options: {}
+    };
+
+    switch (num) {
+        case 0:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            break;
+        case 1:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart1')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart1 = new Chart(
+                document.getElementById('myChart1'),
+                config1
+            );
+
+    }
+
+}
 
 //Baja datos de las mesas y camarero logueado - llama a la función que carga la info
 function camareroIn() {
     var camareros = JSON.parse(bajar('camarero'));
-    var camareroActual = (camareros[1])
-    //var camareroActual = parseInt(camareroActual);
+    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
     var mesas = JSON.parse(bajar('mesa'));
-    document.getElementById('c_nombre').innerText = camareros[1].nombre_camarero
+    document.getElementById('c_nombre').innerText = camareros[(camareroActual - 1)].nombre_camarero
     cargarMesas(camareroActual, mesas);
 }
 
 
-function borra() {
+function borraMesas() {
     var mesasA = document.querySelector('.c_cpntainer1');
     var mesasC = document.querySelector('.c_cpntainer2');
     var mesasR = document.querySelector('.c_cpntainer3');
@@ -330,10 +473,10 @@ function borra() {
 //CARGA LA INFO EN EL HTML CAMARERO: MESAS ABIERTAS/OCUPADAS Y LIBRES
 function cargarMesas(camareroActual, mesas) {
     //BORRA MESAS ANTERIORES PARA ACTUALIZAR
-    borra();
+    borraMesas();
     for (let i = 0; i < 10; i++) {
         //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual.id_camarero) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual) {
             var divMesa = document.createElement('button');
             divMesa.className = `c_mesasA`;
             divMesa.addEventListener('click', () => { enviaMesa(i); })
@@ -353,7 +496,7 @@ function cargarMesas(camareroActual, mesas) {
         }
 
         //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual.id_camarero) {
+        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual) {
             var divMesa = document.createElement('button');
             divMesa.className = `c_mesasR`;
             var numero = document.createTextNode(mesas[i].numero);
@@ -361,39 +504,43 @@ function cargarMesas(camareroActual, mesas) {
             document.getElementsByClassName("c_cpntainer3")[0].appendChild(divMesa);
         }
     }
-    historial(camareroActual);
+    historial();
 }
 
 //ENVÍA LA MESA A MESA.HTML
 function checkMesa(indice, camareroActual) {
     var mesasArriba = JSON.parse(bajar('mesa'));
     mesasArriba[indice].estado = 'abierta';
-    mesasArriba[indice].id_camarero = camareroActual.id_camarero;
+    mesasArriba[indice].id_camarero = camareroActual;
     subir('mesa', JSON.stringify(mesasArriba));
     camareroIn();
     enviaMesa(indice)
 }
 
+
 function enviaMesa(indice) {
     subir('mesaActual', indice);
     window.location = "mesa.html"
 }
-function historial(camareroActual) {
-    var tickets = JSON.parse(bajar('ticket'));
-    console.log("Entra en tickets");
-    console.log(tickets);
-    console.log(camareroActual);
-    console.log(camareroActual.nombre_camarero)
+function historial() {
+    var tickets = JSON.parse(localStorage.ticket);
+    var camareros = JSON.parse(bajar('camarero'));
+    var camareroActual = parseInt(localStorage.getItem("camareroActual"))
+
     for (let i = 0; i < tickets.length; i++) {
-        console.log(tickets[i].nombre_camarero)
-        if (tickets[i].nombre_camarero == camareroActual.nombre_camarero) {
-            var idTicket = parseInt(tickets[i].id_ticket)
+        if (tickets[i].nombre_camarero == camareros[camareroActual - 1].nombre_camarero) {
+            var idTicket = tickets[i].id_ticket
+            console.log(idTicket)
             var botonTicket = document.createElement('button');
             botonTicket.className = `c_ticket`;
-            botonTicket.addEventListener('click', () => { imprimirTicket(idTicket); })
+            botonTicket.addEventListener('click', () => {
+                consulta_ticket(idTicket);
+                window.location = "ticket.html"
+            })
             var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}`);
             botonTicket.appendChild(id);
-            document.querySelector('c_historial').appendChild(botonTicket);
+            document.querySelector('#c_historial').appendChild(botonTicket);
+
         }
     }
 }
@@ -456,7 +603,7 @@ function iniciarDesplegables() {
     }
 
     let m = 16;
-    while (m < 20) {
+    while (m < 21) {
         //Postres
         let li = document.createElement('li');
         desplegables[3].append(li);
@@ -494,33 +641,43 @@ function sumarYRestar() {
     }
 }
 
-//Añadir pedidos a la comanda
-function añadirComanda() {
-    //Recoger mesaActual
-    var mesa = JSON.parse(localStorage.getItem('mesa'));
-    // localStorage.setItem('mesaActual', 1);
-    var mesaActual = parseInt(localStorage.getItem('mesaActual'));
-    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + mesaActual;
-    document.querySelector('#m_cerrarMesa').innerHTML = 'Cerrar Mesa' + ' ' + mesaActual;
-    var comanda = mesa[mesaActual].comanda;
+//Funcion para borrar la comanda una vez se genere la cuenta
+function borraComanda() {
+    var mostrarComanda = document.querySelector('#m_comanda');
+    borrarChild(mostrarComanda);
+}
 
-    //Añadir cantidades
-    var spanCantidad = document.getElementsByClassName('cantidad');
-    var li = document.getElementsByTagName('li');
+//Muestra la comanda de la mesa Actual
+function verComanda(mesa, mesaActual) {
+    borraComanda();
+    var menu = JSON.parse(localStorage.getItem('menu'));
+    var mostrarComanda = document.querySelector('#m_comanda');
+    let ul = document.createElement('ul');
+    ul.style.display = 'flex';
+    ul.style['flex-flow'] = 'row wrap';
+    ul.style['justify-content'] = 'space-evenly';
 
-    var añadir = document.getElementById('m_añadir');
-    añadir.addEventListener('click', () => {
-        for (let i = 0; i < li.length; i++) {
-            let cantidad = spanCantidad[i].innerHTML;
-            if (cantidad > 0) {
-                comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
-                spanCantidad[i].innerHTML = 0;
-            }
+    let h2 = document.createElement('h2');
+    h2.style.display = 'flex';
+    h2.style['flex-flow'] = 'column wrap';
+    h2.style['align-items'] = 'center';
+    h2.innerHTML = 'Comanda';
+
+    mostrarComanda.append(h2);
+    mostrarComanda.append(ul);
+
+    for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
+        if (mesa[mesaActual].comanda[j] > 0) {
+            let li = document.createElement('li');
+            li.setAttribute('class', 'articuloComanda');
+            li.style.cursor = 'pointer'
+            li.style.padding = '5px';
+            li.style.margin = '3px';
+            li.style.border = '1px solid black';
+            li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
+            ul.append(li);
         }
-        mesa[mesaActual].comanda = comanda;
-        localStorage.setItem('mesa', JSON.stringify(mesa));
-    });
-    return [mesa, mesaActual]
+    }
 }
 
 //funcion desplegables para reutilizar en los clicks
@@ -543,34 +700,40 @@ class Ticket {
         this.total = total;
         this.pagado = pagado;
     }
-
-    get ticketInfo() {
-        return "Dimension1: " + this.dimension1 + "\nDimension2" + this.dimension2 + "\n";
-    }
-    set ticketInfo(dimensiones) {
-        this.dimension1 = dimensiones[0];
-        this.dimension2 = dimensiones[1];
-    }
-
 }
 
+
+//funcion desplegables para reutilizar en los clicks
+function desplegar(desplegable) {
+    let display = desplegable.style.display;
+    if (display == 'none') {
+        desplegable.style.display = 'block';
+    } else {
+        desplegable.style.display = 'none';
+    }
+}
+
+
 //Cerrar Mesa
-function cerrarMesa(mesa, mesaActual) {
+function cerrarMesa(mesa, mesaActual, camareroActual) {
     var fecha = new Date;
     var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
+
     let users = JSON.parse(localStorage.camarero);
     let username = users.map(element => element.nombre_camarero);
     var camareroActual = localStorage.getItem("camareroActual")
+    var camareroActualN = "";
     switch (camareroActual) {
-        case "1": camareroActual = username[0]
+        case "1": camareroActualN = username[0]
             break;
-        case "2": camareroActual = username[1]
+        case "2": camareroActualN = username[1]
             break;
-        case "3": camareroActual = username[2]
+        case "3": camareroActualN = username[2]
             break;
-        case "4": camareroActual = username[3]
+        case "4": camareroActualN = username[3]
             break;
     }
+
     var menu = JSON.parse(localStorage.getItem('menu'));
     var total = 0;
     var pagado = false;
@@ -579,44 +742,68 @@ function cerrarMesa(mesa, mesaActual) {
     for (let i = 0; i < mesa[mesaActual].comanda.length; i++) {
         total += mesa[mesaActual].comanda[i] * menu.precio[i];
     }
-    /*     var p = new Puntuacion(date, aciertos);
-    var puntuaciones = [];
-    // recogemos la info del storage, le añadimos el ultimo resultado y volvemos a guardar
-    var historial = localStorage.getItem("historial");
-    if (!historial) {
-        puntuaciones.push(p);
-        localStorage.setItem("historial", JSON.stringify(puntuaciones));
-    } else {
-        historial = JSON.parse(historial);
-        historial.push(p);
-        localStorage.setItem("historial", JSON.stringify(historial));
-    } */
     if (!ticketsLista) {
-        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
         inicioTicket.push(newTicket);
         localStorage.setItem("ticket", JSON.stringify(inicioTicket))
     } else {
         var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket + 1;
         console.log(ticketsLista)
-        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
         ticketsLista.push(newTicket);
         localStorage.setItem("ticket", JSON.stringify(ticketsLista))
     }
-    //constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado)
     mesa[mesaActual].estado = 'cerrada';
     mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     localStorage.setItem('mesa', JSON.stringify(mesa));
+
+    window.location = 'camarero.html';
+
+
+    let mesasAtendidas = JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
+    users[localStorage.camareroActual - 1].mesasAtendidas = mesasAtendidas + 1;
+    localStorage.setItem("camarero", JSON.stringify(users))
+}
+function adicionarComanda() {
+    //Recoger mesaActual
+    var mesa = JSON.parse(localStorage.getItem('mesa'));
+    // localStorage.setItem('mesaActual', 1);
+    var mesaActual = parseInt(localStorage.getItem('mesaActual'));
+    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
+    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + (mesaActual + 1);
+    document.querySelector('#m_cerrarMesa').innerHTML = 'Generar Cuenta Mesa' + ' ' + (mesaActual + 1);
+    var comanda = mesa[mesaActual].comanda;
+
+    //Añadir cantidades
+    var spanCantidad = document.getElementsByClassName('cantidad');
+
+    var añadir = document.getElementById('m_añadir');
+    añadir.addEventListener('click', () => {
+        for (let i = 0; i < spanCantidad.length; i++) {
+            let cantidad = spanCantidad[i].innerHTML;
+            if (cantidad > 0) {
+                comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
+                spanCantidad[i].innerHTML = 0;
+            }
+        }
+        mesa[mesaActual].comanda = comanda;
+        mesa[mesaActual].id_camarero = camareroActual;
+        localStorage.setItem('mesa', JSON.stringify(mesa));
+        verComanda(mesa, mesaActual)
+    });
+
+    return [mesa, mesaActual, camareroActual]
 }
 
-
-window.addEventListener('load', () => {
+function iniciarMesa() {
     iniciarDesplegables();
     sumarYRestar();
-    var añadir = añadirComanda();
+    var add = adicionarComanda();
+    verComanda(add[0], add[1]);
 
     var cerrar = document.querySelector('#m_cerrarMesa');
     cerrar.addEventListener('click', () => {
-        cerrarMesa(añadir[0], añadir[1]);
+        cerrarMesa(add[0], add[1], add[2]);
     });
 
     //Estilo desplegable
@@ -627,7 +814,14 @@ window.addEventListener('load', () => {
             desplegar(desplegables[i]);
         });
     }
-});
+
+
+    //Boton de Volver
+    var volver = document.querySelector('#m_volver');
+    volver.addEventListener('click', () => {
+        window.location = 'camarero.html'
+    });
+}
 
 
 
