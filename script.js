@@ -343,7 +343,7 @@ function guardarCambios() {
 function cargarGraficos(num) {
 
     // DATOS -------------
-
+    
     var tickets = JSON.parse(bajar('ticket'))
     var camareros = JSON.parse(bajar('camarero'))
     var total = []
@@ -351,6 +351,9 @@ function cargarGraficos(num) {
     var total2 = []
     var total3 = []
     var total4 = []
+    var mesas = 0, mesas1 = 0, mesas2 = 0, mesas3 = 0, mesas4 = 0
+    var sTotal = 0, sTotal1 = 0, sTotal2 = 0, sTotal3 = 0, sTotal4 = 0; 
+    if(tickets != null) {
     for (let i = 0; i < tickets.length; i++) {
         total.push(tickets[i].total)
         if (tickets[i].nombre_camarero == camareros[0].nombre_camarero) {
@@ -376,7 +379,9 @@ function cargarGraficos(num) {
     var sTotal2 = total2.reduce(function (a, b) { return a + b });
     var sTotal3 = total3.reduce(function (a, b) { return a + b });
     var sTotal4 = total4.reduce(function (a, b) { return a + b });
-
+} else {
+    document.getElementById('a_resultados').innerHTML = "No hay datos"
+}
     /*---- Config graficas ----*/
     const labels = [
         'total',
