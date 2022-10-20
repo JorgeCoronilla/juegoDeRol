@@ -263,7 +263,7 @@ function mostrarDatos() {
         placeholders_pass[i].placeholder = password[i];
     };
 }
-function guardarCambios(){
+function guardarCambios() {
     var name = document.getElementsByClassName("userName").value;
     var pass = document.getElementsByClassName("userPass").value;
     var placeholders_name = document.getElementsByClassName("userName");
@@ -280,65 +280,198 @@ function guardarCambios(){
 
 
 //---------------------------------------- GRAFICA RESULTADOS -------------------------------------------------------------------------------------
-function cargarGraficos(){
-var tickets= JSON.parse(bajar('ticket'))
-var camareros= JSON.parse(bajar('camarero'))
-var total = [], fechas = [], mesas = total.length
-var fechas1= [], total1 =[], mesas1= total1.length;
-var fechas2 =[], total2 =[], mesas2= total2.length;
-var fechas3=[], total3 =[], mesas3= total3.length;
-var fechas4=[], total4 =[], mesas4= total4.length;
-mesas1= total1.length
-for (let i=0;i<tickets.length;i++) {
-total.push(tickets[i].total)
-fechas.push(tickets[i].fechas)
-if (tickets[i].nombre_camarero=='0') {
-    total1.push(tickets[i].total)
-    fechas1.push(tickets[i].total)
-}
-if (tickets[i].nombre_camarero=='1') {
-    total2.push(tickets[i].total)
-    fechas2.push(tickets[i].total)
-}
-if (tickets[i].nombre_camarero=='2') {
-    total3.push(tickets[i].total)
-    fechas3.push(tickets[i].total)
-}
-if (tickets[i].nombre_camarero=='3') {
-    total4.push(tickets[i].total)
-    fechas4.push(tickets[i].total)
-}
-}
+function cargarGraficos(num) {
+
+    // DATOS -------------
+    var tickets = JSON.parse(bajar('ticket'))
+    var camareros = JSON.parse(bajar('camarero'))
+    var total = [], fechas = [], mesas = total.length
+    var fechas1 = [], total1 = [], mesas1 = total1.length;
+    var fechas2 = [], total2 = [], mesas2 = total2.length;
+    var fechas3 = [], total3 = [], mesas3 = total3.length;
+    var fechas4 = [], total4 = [], mesas4 = total4.length;
+    mesas1 = total1.length
+    for (let i = 0; i < tickets.length; i++) {
+        total.push(tickets[i].total)
+        fechas.push(tickets[i].fechas)
+        if (tickets[i].nombre_camarero == '0') {
+            total1.push(tickets[i].total)
+            fechas1.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == '1') {
+            total2.push(tickets[i].total)
+            fechas2.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == '2') {
+            total3.push(tickets[i].total)
+            fechas3.push(tickets[i].total)
+        }
+        if (tickets[i].nombre_camarero == '3') {
+            total4.push(tickets[i].total)
+            fechas4.push(tickets[i].total)
+        }
+    }
+
+    /*---- Config graficas ----*/
+    const labels = [
+        'total',
+        camareros[0].nombre_camarero,
+        camareros[1].nombre_camarero,
+        camareros[2].nombre_camarero,
+        camareros[3].nombre_camarero
+    ];
+    const DATA_COUNT = 4;
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Mesas servidas',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [mesas, mesas1, mesas2, mesas3, mesas4]
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
 
 
-const labels = [
-    'total',
-    camareros[0].nombre_camarero,
-    camareros[1].nombre_camarero,
-    camareros[2].nombre_camarero,
-    camareros[3].nombre_camarero
-  ];
+    const labels1 = [
+        fechas1
+    ];
+    const DATA_COUNT1 = 4;
+    const data1 = {
+        labels: labels1,
+        datasets: [{
+            label: camareros[0].nombre_camarero,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: total1
+        }]
+    };
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'Mesas servidas',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [mesas, mesas1, mesas2, mesas3, mesas4]
-    }]
-  };
+    const config1 = {
+        type: 'line',
+        data: data1,
+        options: {}
+    };
 
-  const config = {
-    type: 'line',
-    data: data,
-    options: {}
-  };
+    const labels2 = [
+        fechas2];
+    const DATA_COUNT2 = 4;
+    const data2 = {
+        labels: labels2,
+        datasets: [{
+            label: camareros[1].nombre_camarero,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: total2
+        }]
+    };
 
-  const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-  );
+    const config2 = {
+        type: 'line',
+        data: data2,
+        options: {}
+    };
+
+    const labels3 = [
+        fechas3];
+    const DATA_COUNT3 = 4;
+    const data3 = {
+        labels: labels3,
+        datasets: [{
+            label: camareros[2].nombre_camarero,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: total3
+        }]
+    };
+
+    const config3 = {
+        type: 'line',
+        data: data3,
+        options: {}
+    };
+
+    const labels4 = [
+        fechas4];
+    const DATA_COUNT4 = 4;
+    const data4 = {
+        labels: labels4,
+        datasets: [{
+            label: camareros[3].nombre_camarero,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: total4
+        }]
+    };
+
+    const config4 = {
+        type: 'line',
+        data: data4,
+        options: {}
+    };
+
+
+    switch (num) {
+        case 0:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+
+            break;
+        case 1:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart1')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart1 = new Chart(
+                document.getElementById('myChart1'),
+                config1
+            );
+
+            break;
+        case 2:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart2')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart2 = new Chart(
+                document.getElementById('myChart2'),
+                config2
+            );
+            break;
+        case 3:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart3')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart3 = new Chart(
+                document.getElementById('myChart3'),
+                config3
+            );
+            break;
+        case 4:
+            document.getElementById('a_resultados').innerHTML = ""
+            var canvas = document.createElement('canvas')
+            canvas.setAttribute('id', 'myChart4')
+            document.getElementById('a_resultados').append(canvas)
+            const myChart4 = new Chart(
+                document.getElementById('myChart4'),
+                config4
+            );
+            break;
+    }
+
 }
 
 //Baja datos de las mesas y camarero logueado - llama a la función que carga la info
@@ -346,7 +479,7 @@ function camareroIn() {
     var camareros = JSON.parse(bajar('camarero'));
     var camareroActual = parseInt(localStorage.getItem('camareroActual'));
     var mesas = JSON.parse(bajar('mesa'));
-    document.getElementById('c_nombre').innerText = camareros[(camareroActual-1)].nombre_camarero
+    document.getElementById('c_nombre').innerText = camareros[(camareroActual - 1)].nombre_camarero
     cargarMesas(camareroActual, mesas);
 }
 
@@ -412,7 +545,7 @@ function enviaMesa(indice) {
 }
 function historial() {
     var tickets = JSON.parse(localStorage.ticket)
-    camareroActual=parseInt(localStorage.getItem('camareroActual'))
+    camareroActual = parseInt(localStorage.getItem('camareroActual'))
     for (let i = 0; i < tickets.length; i++) {
         if (tickets[i].nombre_camarero == camareroActual) {
             var idTicket = parseInt(tickets[i].id_ticket)
@@ -666,7 +799,7 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
 }
 
 
-function iniciarMesa(){
+function iniciarMesa() {
     iniciarDesplegables();
     sumarYRestar();
     var añadir = añadirComanda();

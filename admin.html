@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     
 </head>
-<body>
+<body onload="cargarGraficos();">
     <h1>Admin área</h1>
     <div id="a_gestion">
         <h2>Gestión de camareros</h2>
@@ -47,11 +47,20 @@
             <button onclick="guardarCambios()">Guardar cambios</button>
         </div>
     </div>
+    <details>
+        <summary class= "c_style">
+            Resultados
+        </summary>
+        <button onclick="cargarGraficos(0)">Totales</button>
+        <button onclick="cargarGraficos(1)">Camarero 1</button>  
+        <button onclick="cargarGraficos(2)">Camarero 2</button>  
+        <button onclick="cargarGraficos(3)">Camarero 3</button>  
+        <button onclick="cargarGraficos(4)">Camarero 4</button>       
+    </details>
+   
+    
     <div id="a_resultados">
-        <h2>Resumen del mes</h2>
-        <div>
-            <canvas id="myChart" width="400" height="400"></canvas>
-        </div>
+                
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
