@@ -752,41 +752,7 @@ function verComanda(mesa, mesaActual) {
             ul.append(li);
         }
     }
-    // borrarArticulo()
 }
-
-//Borrar un articulo de la comanda
-// function borrarArticulo() {
-//     let articuloComanda = document.getElementsByClassName('articuloComanda');
-//     let articulo = []
-//     for (let i = 0; i < articuloComanda.length; i++) {
-//         articulo.push(articuloComanda[i].innerHTML);
-//         articuloComanda[i].style['background-color'] = 'white';
-//         articuloComanda[i].addEventListener('click', () => {
-//             if (articuloComanda[i].style['background-color'] == 'white') {
-//                 articuloComanda[i].innerHTML = `<span class='NOborrar'>&#8592</span> <span class='borrarElemento'>Borrar</span>`;
-//                 articuloComanda[i].style['background-color'] = 'red';
-//                 articuloComanda[i].style.width = '100px';
-//                 articuloComanda[i].style.display = 'flex';
-//                 articuloComanda[i].style['flex-direction'] = 'row';
-//                 articuloComanda[i].style['justify-content'] = 'space-between';
-//             }
-//             let noBorrar = document.querySelectorAll('.NOborrar');
-//             noBorrar[i].addEventListener('click', () => {
-//                 console.log(noBorrar[i]);
-//                 console.log(articuloComanda[i])
-//                 console.log(articuloComanda[i].innerHTML)
-//                 console.log(articulo[i])
-//                 articuloComanda[i].innerHTML = articulo[i];
-//                 // articuloComanda[i].style['background-color'] = 'white';
-//             });
-//             // else {
-//             //     articuloComanda[i].innerHTML = articulo;
-//             //     articuloComanda[i].style['background-color'] = 'white';
-//             // }
-//         });
-//     }
-// }
 
 //funcion desplegables para reutilizar en los clicks
 function desplegar(desplegable) {
