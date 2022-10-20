@@ -204,13 +204,13 @@ function consulta_ticket(id_ticket) {
 
 // ---------------------------------------PASARELA DE PAGO -----------------------------------
 
-function cargarPago(){
+function cargarPago() {
     var ticketSeleccionado = localStorage.ticketSeleccionado
     var tickets = JSON.parse(localStorage.ticket)
     var pagado = tickets[ticketSeleccionado].pagado;
-    if(pagado){
+    if (pagado) {
         alert("Esta cuenta está pagada. muchas gracias");
-        window.location="index.html"
+        window.location = "index.html"
     }
     var precio = tickets[ticketSeleccionado].total
     console.log(precio)
@@ -231,9 +231,9 @@ function checkPago() {
     var ticketSeleccionado = localStorage.ticketSeleccionado
     var tikets = JSON.parse(localStorage.ticket)
     var pagado = tikets[ticketSeleccionado].pagado;
-    if(pagado){
+    if (pagado) {
         alert("Esta cuenta está pagada. muchas gracias");
-        window.location="index.html"
+        window.location = "index.html"
     }
     if (!nombre.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
         alert("El nombre introducido no es válido.");
@@ -259,10 +259,10 @@ function checkPago() {
     if (validation && validationCard) {
         alert("Operación finalizada con éxito.")
         window.location = "index.html"
-        pagado=true;
+        pagado = true;
     }
     tikets[ticketSeleccionado].pagado = pagado;
-    localStorage.setItem("ticket",JSON.stringify(tikets))
+    localStorage.setItem("ticket", JSON.stringify(tikets))
 }
 // ---------------------------------------------- FUNCIONES ADMIN -------------------------------------
 
@@ -275,33 +275,60 @@ function mostrarDatos() {
     var placeholders_pass = document.getElementsByClassName("userPass");
     console.log(placeholders_name)
     console.log(placeholders_pass)
+    var mesas = JSON.parse(localStorage.mesa)
+    console.log(mesas)
+    console.log(username)
+
+    var mesasAtendidas1 = []
+    for(let i=0;i<10;i++){
+    if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 1) {
+        mesasAtendidas1.push(mesas[i].numero)
+    }}
+    var mesasAtendidas2 = []
+    for(let i=0;i<10;i++){
+    if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 2) {
+        mesasAtendidas2.push(mesas[i].numero)
+    }}
+    var mesasAtendidas3 = []
+    for(let i=0;i<10;i++){
+    if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 3) {
+        mesasAtendidas3.push(mesas[i].numero)
+    }}
+    var mesasAtendidas4 = []
+    for(let i=0;i<10;i++){
+    if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == 4) {
+        mesasAtendidas4.push(mesas[i].numero)
+    }}
+
     for (let i = 0; i < placeholders_name.length; i++) {
         placeholders_name[i].value = username[i];
         placeholders_pass[i].value = password[i];
-        rendimiento[i].innerHTML = users[i].mesasAtendidas;
-    };
+    }
+    rendimiento[0].innerHTML = mesasAtendidas1;
+    rendimiento[1].innerHTML = mesasAtendidas2;
+    rendimiento[2].innerHTML = mesasAtendidas3;
+    rendimiento[3].innerHTML = mesasAtendidas4;
 }
-
-function guardarCambios(){
-    var placeholders_name = document.getElementsByClassName("userName");
-    var placeholders_pass = document.getElementsByClassName("userPass");
-    var names = [];
-    var pass = [];
-    let users = JSON.parse(localStorage.camarero);
-    for (let i = 0; i < placeholders_name.length; i++) {
-        names.push(placeholders_name[i].value);
-        pass.push(placeholders_pass[i].value);
-    };
-    console.log(names)
-    console.log(pass)
-    console.log(users)
-    for (let k = 0; k < placeholders_name.length; k++) {
-        users[k].nombre_camarero = names[k];
-        users[k].password = pass[k];
-    };
-    console.log(users)
-    localStorage.setItem("camarero",JSON.stringify(users))
-}
+        function guardarCambios() {
+            var placeholders_name = document.getElementsByClassName("userName");
+            var placeholders_pass = document.getElementsByClassName("userPass");
+            var names = [];
+            var pass = [];
+            let users = JSON.parse(localStorage.camarero);
+            for (let i = 0; i < placeholders_name.length; i++) {
+                names.push(placeholders_name[i].value);
+                pass.push(placeholders_pass[i].value);
+            };
+            console.log(names)
+            console.log(pass)
+            console.log(users)
+            for (let k = 0; k < placeholders_name.length; k++) {
+                users[k].nombre_camarero = names[k];
+                users[k].password = pass[k];
+            };
+            console.log(users)
+            localStorage.setItem("camarero", JSON.stringify(users))
+        }
 
 
 
@@ -394,7 +421,7 @@ function cargarGraficos(num) {
         options: {}
     };
 
-            switch (num) {
+           switch (num) {
                 case 0:
                     document.getElementById('a_resultados').innerHTML = ""
                     var canvas = document.createElement('canvas')
@@ -404,7 +431,7 @@ function cargarGraficos(num) {
                         document.getElementById('myChart'),
                         config
                     );
-        
+
                     break;
                 case 1:
                     document.getElementById('a_resultados').innerHTML = ""
@@ -415,74 +442,76 @@ function cargarGraficos(num) {
                         document.getElementById('myChart1'),
                         config1
                     );
+
             }
 
-}
-
-//Baja datos de las mesas y camarero logueado - llama a la función que carga la info
-function camareroIn() {
-    var camareros = JSON.parse(bajar('camarero'));
-    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
-    var mesas = JSON.parse(bajar('mesa'));
-    document.getElementById('c_nombre').innerText = camareros[(camareroActual - 1)].nombre_camarero
-    cargarMesas(camareroActual, mesas);
-}
-
-
-function borraMesas() {
-    var mesasA = document.querySelector('.c_cpntainer1');
-    var mesasC = document.querySelector('.c_cpntainer2');
-    var mesasR = document.querySelector('.c_cpntainer3');
-    borrarChild(mesasA);
-    borrarChild(mesasC);
-    borrarChild(mesasR);
-}
-//CARGA LA INFO EN EL HTML CAMARERO: MESAS ABIERTAS/OCUPADAS Y LIBRES
-function cargarMesas(camareroActual, mesas) {
-    //BORRA MESAS ANTERIORES PARA ACTUALIZAR
-    borraMesas();
-    for (let i = 0; i < 10; i++) {
-        //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual) {
-            var divMesa = document.createElement('button');
-            divMesa.className = `c_mesasA`;
-            divMesa.addEventListener('click', () => { enviaMesa(i); })
-            var numero = document.createTextNode((mesas[i].numero));
-            divMesa.appendChild(numero);
-            document.querySelector('.c_cpntainer1').appendChild(divMesa);
         }
 
-        //FILTRA MESAS DISPONIBLES Y LAS PINTA
-        if (mesas[i].estado == 'cerrada') {
-            var divMesa = document.createElement('button');
-            divMesa.className = `c_mesasC`;
-            divMesa.addEventListener('click', () => { checkMesa(i, camareroActual); })
-            var numero = document.createTextNode((mesas[i].numero));
-            divMesa.appendChild(numero);
-            document.querySelector('.c_cpntainer2').appendChild(divMesa);
+        //Baja datos de las mesas y camarero logueado - llama a la función que carga la info
+        function camareroIn() {
+            var camareros = JSON.parse(bajar('camarero'));
+            var camareroActual = parseInt(localStorage.getItem('camareroActual'));
+            var mesas = JSON.parse(bajar('mesa'));
+            document.getElementById('c_nombre').innerText = camareros[(camareroActual - 1)].nombre_camarero
+            cargarMesas(camareroActual, mesas);
         }
 
-        //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
-        if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual) {
-            var divMesa = document.createElement('button');
-            divMesa.className = `c_mesasR`;
-            var numero = document.createTextNode(mesas[i].numero);
-            divMesa.appendChild(numero);
-            document.getElementsByClassName("c_cpntainer3")[0].appendChild(divMesa);
-        }
-    }
-    historial();
-}
 
-//ENVÍA LA MESA A MESA.HTML
-function checkMesa(indice, camareroActual) {
-    var mesasArriba = JSON.parse(bajar('mesa'));
-    mesasArriba[indice].estado = 'abierta';
-    mesasArriba[indice].id_camarero = camareroActual;
-    subir('mesa', JSON.stringify(mesasArriba));
-    camareroIn();
-    enviaMesa(indice)
-}
+        function borraMesas() {
+            var mesasA = document.querySelector('.c_cpntainer1');
+            var mesasC = document.querySelector('.c_cpntainer2');
+            var mesasR = document.querySelector('.c_cpntainer3');
+            borrarChild(mesasA);
+            borrarChild(mesasC);
+            borrarChild(mesasR);
+        }
+        //CARGA LA INFO EN EL HTML CAMARERO: MESAS ABIERTAS/OCUPADAS Y LIBRES
+        function cargarMesas(camareroActual, mesas) {
+            //BORRA MESAS ANTERIORES PARA ACTUALIZAR
+            borraMesas();
+            for (let i = 0; i < 10; i++) {
+                //FILTRA MESAS ABIERTAS DEL CAMARERO Y LAS PINTA
+                if (mesas[i].estado == 'abierta' && mesas[i].id_camarero == camareroActual) {
+                    var divMesa = document.createElement('button');
+                    divMesa.className = `c_mesasA`;
+                    divMesa.addEventListener('click', () => { enviaMesa(i); })
+                    var numero = document.createTextNode((mesas[i].numero));
+                    divMesa.appendChild(numero);
+                    document.querySelector('.c_cpntainer1').appendChild(divMesa);
+                }
+
+                //FILTRA MESAS DISPONIBLES Y LAS PINTA
+                if (mesas[i].estado == 'cerrada') {
+                    var divMesa = document.createElement('button');
+                    divMesa.className = `c_mesasC`;
+                    divMesa.addEventListener('click', () => { checkMesa(i, camareroActual); })
+                    var numero = document.createTextNode((mesas[i].numero));
+                    divMesa.appendChild(numero);
+                    document.querySelector('.c_cpntainer2').appendChild(divMesa);
+                }
+
+                //FILTRA MESAS ABIERTAS DE OTROS CAMAREROS Y LAS PINTA
+                if (mesas[i].estado == 'abierta' && mesas[i].id_camarero != camareroActual) {
+                    var divMesa = document.createElement('button');
+                    divMesa.className = `c_mesasR`;
+                    var numero = document.createTextNode(mesas[i].numero);
+                    divMesa.appendChild(numero);
+                    document.getElementsByClassName("c_cpntainer3")[0].appendChild(divMesa);
+                }
+            }
+            historial();
+        }
+
+        //ENVÍA LA MESA A MESA.HTML
+        function checkMesa(indice, camareroActual) {
+            var mesasArriba = JSON.parse(bajar('mesa'));
+            mesasArriba[indice].estado = 'abierta';
+            mesasArriba[indice].id_camarero = camareroActual;
+            subir('mesa', JSON.stringify(mesasArriba));
+            camareroIn();
+            enviaMesa(indice)
+        }
+
 
 function enviaMesa(indice) {
     subir('mesaActual', indice);
@@ -505,281 +534,280 @@ function historial() {
             var id = document.createTextNode(`Fecha: ${tickets[i].fecha} | id: ${idTicket}`);
             botonTicket.appendChild(id);
             document.querySelector('#c_historial').appendChild(botonTicket);
+
         }
-    }
-}
 
-function borrarChild(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
+        function borrarChild(parent) {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
 
 
-//Iniciar desplegables del Menu
-function iniciarDesplegables() {
-    var menu = JSON.parse(localStorage.getItem('menu'));
-    var desplegables = document.getElementsByClassName('m_desplegables');
+        //Iniciar desplegables del Menu
+        function iniciarDesplegables() {
+            var menu = JSON.parse(localStorage.getItem('menu'));
+            var desplegables = document.getElementsByClassName('m_desplegables');
 
-    let i = 0;
-    while (i < 7) {
-        //Bebidas
-        let li = document.createElement('li');
-        desplegables[0].append(li);
-        li.innerHTML = (`<span class = 'articulo'>${menu.nombre[i]}</span>`);
+            let i = 0;
+            while (i < 7) {
+                //Bebidas
+                let li = document.createElement('li');
+                desplegables[0].append(li);
+                li.innerHTML = (`<span class = 'articulo'>${menu.nombre[i]}</span>`);
 
-        let span = document.createElement('span');
-        span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
+                let span = document.createElement('span');
+                span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
 
-        li.append(span);
+                li.append(span);
 
-        i++;
-    };
+                i++;
+            };
 
-    let j = 7;
-    while (j < 12) {
-        //Primeros
-        let li = document.createElement('li');
-        desplegables[1].append(li);
-        li.innerHTML = (`<span class = 'articulo'>${menu.nombre[j]}</span>`);
+            let j = 7;
+            while (j < 12) {
+                //Primeros
+                let li = document.createElement('li');
+                desplegables[1].append(li);
+                li.innerHTML = (`<span class = 'articulo'>${menu.nombre[j]}</span>`);
 
-        let span = document.createElement('span');
-        span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
+                let span = document.createElement('span');
+                span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
 
-        li.append(span);
+                li.append(span);
 
-        j++;
-    }
+                j++;
+            }
 
-    let k = 12;
-    while (k < 16) {
-        //Segundos
-        let li = document.createElement('li');
-        desplegables[2].append(li);
-        li.innerHTML = (`<span class = 'articulo'>${menu.nombre[k]}</span>`);
+            let k = 12;
+            while (k < 16) {
+                //Segundos
+                let li = document.createElement('li');
+                desplegables[2].append(li);
+                li.innerHTML = (`<span class = 'articulo'>${menu.nombre[k]}</span>`);
 
-        let span = document.createElement('span');
-        span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
+                let span = document.createElement('span');
+                span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
 
-        li.append(span);
+                li.append(span);
 
-        k++;
-    }
+                k++;
+            }
 
-    let m = 16;
-    while (m < 21) {
-        //Postres
-        let li = document.createElement('li');
-        desplegables[3].append(li);
-        li.innerHTML = (`<span class = 'articulo'>${menu.nombre[m]}</span>`);
+            let m = 16;
+            while (m < 21) {
+                //Postres
+                let li = document.createElement('li');
+                desplegables[3].append(li);
+                li.innerHTML = (`<span class = 'articulo'>${menu.nombre[m]}</span>`);
 
-        let span = document.createElement('span');
-        span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
+                let span = document.createElement('span');
+                span.innerHTML = (` <span class = 'restar'>-</span> <span class='cantidad'>0</span> <span class='sumar'>+</span>`);
 
-        li.append(span);
+                li.append(span);
 
-        m++;
-    }
+                m++;
+            }
 
-}
+        }
 
-//Añadir y quitar cantidades de cada elemento del menu
-function sumarYRestar() {
-    var restar = document.getElementsByClassName('restar');
-    var sumar = document.getElementsByClassName('sumar');
-    var spanCantidad = document.getElementsByClassName('cantidad');
+        //Añadir y quitar cantidades de cada elemento del menu
+        function sumarYRestar() {
+            var restar = document.getElementsByClassName('restar');
+            var sumar = document.getElementsByClassName('sumar');
+            var spanCantidad = document.getElementsByClassName('cantidad');
 
-    for (let i = 0; i < sumar.length; i++) {
-        restar[i].addEventListener('click', () => {
-            let numero = parseInt(spanCantidad[i].innerHTML);
-            if (numero > 0) {
-                spanCantidad[i].innerHTML = numero - 1;
+            for (let i = 0; i < sumar.length; i++) {
+                restar[i].addEventListener('click', () => {
+                    let numero = parseInt(spanCantidad[i].innerHTML);
+                    if (numero > 0) {
+                        spanCantidad[i].innerHTML = numero - 1;
+                    } else {
+                        spanCantidad[i].innerHTML = numero;
+                    }
+                });
+                sumar[i].addEventListener('click', () => {
+                    let numero = parseInt(spanCantidad[i].innerHTML);
+                    spanCantidad[i].innerHTML = numero + 1;
+                });
+            }
+        }
+
+        //Añadir pedidos a la comanda
+        function adicionarComanda() {
+            //Recoger mesaActual
+            var mesa = JSON.parse(localStorage.getItem('mesa'));
+            // localStorage.setItem('mesaActual', 1);
+            var mesaActual = parseInt(localStorage.getItem('mesaActual'));
+            var camareroActual = parseInt(localStorage.getItem('camareroActual'));
+            document.querySelector('h1').innerHTML = 'Mesa' + ' ' + (mesaActual + 1);
+            document.querySelector('#m_cerrarMesa').innerHTML = 'Generar Cuenta Mesa' + ' ' + (mesaActual + 1);
+            var comanda = mesa[mesaActual].comanda;
+
+            //Añadir cantidades
+            var spanCantidad = document.getElementsByClassName('cantidad');
+
+            var añadir = document.getElementById('m_añadir');
+            añadir.addEventListener('click', () => {
+                for (let i = 0; i < spanCantidad.length; i++) {
+                    let cantidad = spanCantidad[i].innerHTML;
+                    if (cantidad > 0) {
+                        comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
+                        spanCantidad[i].innerHTML = 0;
+                    }
+                }
+                mesa[mesaActual].comanda = comanda;
+                mesa[mesaActual].id_camarero = camareroActual;
+                localStorage.setItem('mesa', JSON.stringify(mesa));
+                verComanda(mesa, mesaActual)
+            });
+
+            return [mesa, mesaActual, camareroActual]
+        }
+
+        function borraComanda() {
+            var mostrarComanda = document.querySelector('#m_comanda');
+            borrarChild(mostrarComanda);
+        }
+
+        function verComanda(mesa, mesaActual) {
+            borraComanda();
+            var menu = JSON.parse(localStorage.getItem('menu'));
+            var mostrarComanda = document.querySelector('#m_comanda');
+            let ul = document.createElement('ul');
+            ul.style.display = 'flex';
+            ul.style['flex-flow'] = 'row wrap';
+            ul.style['justify-content'] = 'space-evenly';
+
+            let h2 = document.createElement('h2');
+            h2.style.display = 'flex';
+            h2.style['flex-flow'] = 'column wrap';
+            h2.style['align-items'] = 'center';
+            h2.innerHTML = 'Comanda';
+
+            mostrarComanda.append(h2);
+            mostrarComanda.append(ul);
+
+            for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
+                if (mesa[mesaActual].comanda[j] > 0) {
+                    let li = document.createElement('li');
+                    li.style.padding = '5px';
+                    li.style.margin = '3px';
+                    li.style.border = '1px solid black';
+                    li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
+                    ul.append(li);
+                }
+            }
+        }
+
+        //funcion desplegables para reutilizar en los clicks
+        function desplegar(desplegable) {
+            let display = desplegable.style.display;
+            if (display == 'none') {
+                desplegable.style.display = 'block';
             } else {
-                spanCantidad[i].innerHTML = numero;
-            }
-        });
-        sumar[i].addEventListener('click', () => {
-            let numero = parseInt(spanCantidad[i].innerHTML);
-            spanCantidad[i].innerHTML = numero + 1;
-        });
-    }
-}
-
-//Añadir pedidos a la comanda
-function adicionarComanda() {
-    //Recoger mesaActual
-    var mesa = JSON.parse(localStorage.getItem('mesa'));
-    // localStorage.setItem('mesaActual', 1);
-    var mesaActual = parseInt(localStorage.getItem('mesaActual'));
-    var camareroActual = parseInt(localStorage.getItem('camareroActual'));
-    document.querySelector('h1').innerHTML = 'Mesa' + ' ' + (mesaActual + 1);
-    document.querySelector('#m_cerrarMesa').innerHTML = 'Generar Cuenta Mesa' + ' ' + (mesaActual + 1);
-    var comanda = mesa[mesaActual].comanda;
-
-    //Añadir cantidades
-    var spanCantidad = document.getElementsByClassName('cantidad');
-
-    var añadir = document.getElementById('m_añadir');
-    añadir.addEventListener('click', () => {
-        for (let i = 0; i < spanCantidad.length; i++) {
-            let cantidad = spanCantidad[i].innerHTML;
-            if (cantidad > 0) {
-                comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
-                spanCantidad[i].innerHTML = 0;
+                desplegable.style.display = 'none';
             }
         }
-        mesa[mesaActual].comanda = comanda;
-        mesa[mesaActual].id_camarero = camareroActual;
-        localStorage.setItem('mesa', JSON.stringify(mesa));
-        verComanda(mesa, mesaActual)
-    });
+        //TICKET
+        class Ticket {
+            constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado) {
+                this.id_ticket = id_ticket;
+                this.fecha = fecha;
+                this.id_mesa = id_mesa;
+                this.nombre_camarero = nombre_camarero;
+                this.comanda = comanda;
+                this.total = total;
+                this.pagado = pagado;
+            }
 
-    return [mesa, mesaActual, camareroActual]
-}
+            get ticketInfo() {
+                return "Dimension1: " + this.dimension1 + "\nDimension2" + this.dimension2 + "\n";
+            }
+            set ticketInfo(dimensiones) {
+                this.dimension1 = dimensiones[0];
+                this.dimension2 = dimensiones[1];
+            }
 
-function borraComanda() {
-    var mostrarComanda = document.querySelector('#m_comanda');
-    borrarChild(mostrarComanda);
-}
-
-function verComanda(mesa, mesaActual) {
-    borraComanda();
-    var menu = JSON.parse(localStorage.getItem('menu'));
-    var mostrarComanda = document.querySelector('#m_comanda');
-    let ul = document.createElement('ul');
-    ul.style.display = 'flex';
-    ul.style['flex-flow'] = 'row wrap';
-    ul.style['justify-content'] = 'space-evenly';
-
-    let h2 = document.createElement('h2');
-    h2.style.display = 'flex';
-    h2.style['flex-flow'] = 'column wrap';
-    h2.style['align-items'] = 'center';
-    h2.innerHTML = 'Comanda';
-
-    mostrarComanda.append(h2);
-    mostrarComanda.append(ul);
-
-    for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
-        if (mesa[mesaActual].comanda[j] > 0) {
-            let li = document.createElement('li');
-            li.style.padding = '5px';
-            li.style.margin = '3px';
-            li.style.border = '1px solid black';
-            li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
-            ul.append(li);
         }
-    }
-}
 
-//funcion desplegables para reutilizar en los clicks
-function desplegar(desplegable) {
-    let display = desplegable.style.display;
-    if (display == 'none') {
-        desplegable.style.display = 'block';
-    } else {
-        desplegable.style.display = 'none';
-    }
-}
-//TICKET
-class Ticket {
-    constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado) {
-        this.id_ticket = id_ticket;
-        this.fecha = fecha;
-        this.id_mesa = id_mesa;
-        this.nombre_camarero = nombre_camarero;
-        this.comanda = comanda;
-        this.total = total;
-        this.pagado = pagado;
-    }
+        //Cerrar Mesa
+        function cerrarMesa(mesa, mesaActual, camareroActual) {
+            var fecha = new Date;
+            var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
 
-    get ticketInfo() {
-        return "Dimension1: " + this.dimension1 + "\nDimension2" + this.dimension2 + "\n";
-    }
-    set ticketInfo(dimensiones) {
-        this.dimension1 = dimensiones[0];
-        this.dimension2 = dimensiones[1];
-    }
+            let users = JSON.parse(localStorage.camarero);
+            let username = users.map(element => element.nombre_camarero);
+            var camareroActual = localStorage.getItem("camareroActual")
+            var camareroActualN = "";
+            switch (camareroActual) {
+                case "1": camareroActualN = username[0]
+                    break;
+                case "2": camareroActualN = username[1]
+                    break;
+                case "3": camareroActualN = username[2]
+                    break;
+                case "4": camareroActualN = username[3]
+                    break;
+            }
 
-}
+            var menu = JSON.parse(localStorage.getItem('menu'));
+            var total = 0;
+            var pagado = false;
+            var ticketsLista = JSON.parse(localStorage.getItem("ticket"));
+            var inicioTicket = [];
+            for (let i = 0; i < mesa[mesaActual].comanda.length; i++) {
+                total += mesa[mesaActual].comanda[i] * menu.precio[i];
+            }
+            if (!ticketsLista) {
+                var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
+                inicioTicket.push(newTicket);
+                localStorage.setItem("ticket", JSON.stringify(inicioTicket))
+            } else {
+                var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket + 1;
+                console.log(ticketsLista)
+                var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
+                ticketsLista.push(newTicket);
+                localStorage.setItem("ticket", JSON.stringify(ticketsLista))
+            }
+            mesa[mesaActual].estado = 'cerrada';
+            mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            localStorage.setItem('mesa', JSON.stringify(mesa));
 
-//Cerrar Mesa
-function cerrarMesa(mesa, mesaActual, camareroActual) {
-    var fecha = new Date;
-    var fechaticket = fecha.getDay() + "/" + fecha.getMonth() + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes();
+            window.location = 'camarero.html';
 
-    let users = JSON.parse(localStorage.camarero);
-    let username = users.map(element => element.nombre_camarero);
-    var camareroActual = localStorage.getItem("camareroActual")
-    var camareroActualN = "";
-    switch (camareroActual) {
-        case "1": camareroActualN = username[0]
-            break;
-        case "2": camareroActualN = username[1]
-            break;
-        case "3": camareroActualN = username[2]
-            break;
-        case "4": camareroActualN = username[3]
-            break;
-    }
-
-    var menu = JSON.parse(localStorage.getItem('menu'));
-    var total = 0;
-    var pagado = false;
-    var ticketsLista = JSON.parse(localStorage.getItem("ticket"));
-    var inicioTicket = [];
-    for (let i = 0; i < mesa[mesaActual].comanda.length; i++) {
-        total += mesa[mesaActual].comanda[i] * menu.precio[i];
-    }
-    if (!ticketsLista) {
-        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
-        inicioTicket.push(newTicket);
-        localStorage.setItem("ticket", JSON.stringify(inicioTicket))
-    } else {
-        var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket + 1;
-        console.log(ticketsLista)
-        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
-        ticketsLista.push(newTicket);
-        localStorage.setItem("ticket", JSON.stringify(ticketsLista))
-    }
-    mesa[mesaActual].estado = 'cerrada';
-    mesa[mesaActual].comanda = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    localStorage.setItem('mesa', JSON.stringify(mesa));
-
-    window.location = 'camarero.html';
-
-    let mesasAtendidas =  JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
-    users[localStorage.camareroActual-1].mesasAtendidas = mesasAtendidas +1;
-    localStorage.setItem("camarero", JSON.stringify(users))
-}
+            let mesasAtendidas = JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
+            users[localStorage.camareroActual - 1].mesasAtendidas = mesasAtendidas + 1;
+            localStorage.setItem("camarero", JSON.stringify(users))
+        }
 
 
-function iniciarMesa(){
-    iniciarDesplegables();
-    sumarYRestar();
-    var add = adicionarComanda();
-    verComanda(add[0], add[1]);
+        function iniciarMesa() {
+            iniciarDesplegables();
+            sumarYRestar();
+            var add = adicionarComanda();
+            verComanda(add[0], add[1]);
 
-    var cerrar = document.querySelector('#m_cerrarMesa');
-    cerrar.addEventListener('click', () => {
-        cerrarMesa(add[0], add[1], add[2]);
-    });
+            var cerrar = document.querySelector('#m_cerrarMesa');
+            cerrar.addEventListener('click', () => {
+                cerrarMesa(add[0], add[1], add[2]);
+            });
 
-    //Estilo desplegable
-    var desplegables = document.getElementsByClassName('m_desplegables');
-    var opciones = document.querySelectorAll('.m_opciones h2');
-    for (let i = 0; i < opciones.length; i++) {
-        opciones[i].addEventListener('click', () => {
-            desplegar(desplegables[i]);
-        });
-    }
+            //Estilo desplegable
+            var desplegables = document.getElementsByClassName('m_desplegables');
+            var opciones = document.querySelectorAll('.m_opciones h2');
+            for (let i = 0; i < opciones.length; i++) {
+                opciones[i].addEventListener('click', () => {
+                    desplegar(desplegables[i]);
+                });
+            }
 
-    //Boton de Volver
-    var volver = document.querySelector('#m_volver');
-    volver.addEventListener('click', () => {
-        window.location = 'camarero.html'
-    });
-}
+            //Boton de Volver
+            var volver = document.querySelector('#m_volver');
+            volver.addEventListener('click', () => {
+                window.location = 'camarero.html'
+            });
+        }
 
 
 
