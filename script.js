@@ -204,13 +204,13 @@ function consulta_ticket(id_ticket) {
 
 // ---------------------------------------PASARELA DE PAGO -----------------------------------
 
-function cargarPago(){
+function cargarPago() {
     var ticketSeleccionado = localStorage.ticketSeleccionado
     var tickets = JSON.parse(localStorage.ticket)
     var pagado = tickets[ticketSeleccionado].pagado;
-    if(pagado){
+    if (pagado) {
         alert("Esta cuenta está pagada. muchas gracias");
-        window.location="index.html"
+        window.location = "index.html"
     }
     var precio = tickets[ticketSeleccionado].total
     console.log(precio)
@@ -231,9 +231,9 @@ function checkPago() {
     var ticketSeleccionado = localStorage.ticketSeleccionado
     var tikets = JSON.parse(localStorage.ticket)
     var pagado = tikets[ticketSeleccionado].pagado;
-    if(pagado){
+    if (pagado) {
         alert("Esta cuenta está pagada. muchas gracias");
-        window.location="index.html"
+        window.location = "index.html"
     }
     if (!nombre.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
         alert("El nombre introducido no es válido.");
@@ -259,10 +259,10 @@ function checkPago() {
     if (validation && validationCard) {
         alert("Operación finalizada con éxito.")
         window.location = "index.html"
-        pagado=true;
+        pagado = true;
     }
     tikets[ticketSeleccionado].pagado = pagado;
-    localStorage.setItem("ticket",JSON.stringify(tikets))
+    localStorage.setItem("ticket", JSON.stringify(tikets))
 }
 // ---------------------------------------------- FUNCIONES ADMIN -------------------------------------
 
@@ -282,7 +282,7 @@ function mostrarDatos() {
     };
 }
 
-function guardarCambios(){
+function guardarCambios() {
     var placeholders_name = document.getElementsByClassName("userName");
     var placeholders_pass = document.getElementsByClassName("userPass");
     var names = [];
@@ -300,7 +300,7 @@ function guardarCambios(){
         users[k].password = pass[k];
     };
     console.log(users)
-    localStorage.setItem("camarero",JSON.stringify(users))
+    localStorage.setItem("camarero", JSON.stringify(users))
 }
 
 
@@ -715,11 +715,13 @@ function adicionarComanda() {
     return [mesa, mesaActual, camareroActual]
 }
 
+//Funcion para borrar la comanda una vez se genere la cuenta
 function borraComanda() {
     var mostrarComanda = document.querySelector('#m_comanda');
     borrarChild(mostrarComanda);
 }
 
+//Muestra la comanda de la mesa Actual
 function verComanda(mesa, mesaActual) {
     borraComanda();
     var menu = JSON.parse(localStorage.getItem('menu'));
@@ -741,6 +743,8 @@ function verComanda(mesa, mesaActual) {
     for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
         if (mesa[mesaActual].comanda[j] > 0) {
             let li = document.createElement('li');
+            li.setAttribute('class', 'articuloComanda');
+            li.style.cursor = 'pointer'
             li.style.padding = '5px';
             li.style.margin = '3px';
             li.style.border = '1px solid black';
@@ -748,7 +752,41 @@ function verComanda(mesa, mesaActual) {
             ul.append(li);
         }
     }
+    // borrarArticulo()
 }
+
+//Borrar un articulo de la comanda
+// function borrarArticulo() {
+//     let articuloComanda = document.getElementsByClassName('articuloComanda');
+//     let articulo = []
+//     for (let i = 0; i < articuloComanda.length; i++) {
+//         articulo.push(articuloComanda[i].innerHTML);
+//         articuloComanda[i].style['background-color'] = 'white';
+//         articuloComanda[i].addEventListener('click', () => {
+//             if (articuloComanda[i].style['background-color'] == 'white') {
+//                 articuloComanda[i].innerHTML = `<span class='NOborrar'>&#8592</span> <span class='borrarElemento'>Borrar</span>`;
+//                 articuloComanda[i].style['background-color'] = 'red';
+//                 articuloComanda[i].style.width = '100px';
+//                 articuloComanda[i].style.display = 'flex';
+//                 articuloComanda[i].style['flex-direction'] = 'row';
+//                 articuloComanda[i].style['justify-content'] = 'space-between';
+//             }
+//             let noBorrar = document.querySelectorAll('.NOborrar');
+//             noBorrar[i].addEventListener('click', () => {
+//                 console.log(noBorrar[i]);
+//                 console.log(articuloComanda[i])
+//                 console.log(articuloComanda[i].innerHTML)
+//                 console.log(articulo[i])
+//                 articuloComanda[i].innerHTML = articulo[i];
+//                 // articuloComanda[i].style['background-color'] = 'white';
+//             });
+//             // else {
+//             //     articuloComanda[i].innerHTML = articulo;
+//             //     articuloComanda[i].style['background-color'] = 'white';
+//             // }
+//         });
+//     }
+// }
 
 //funcion desplegables para reutilizar en los clicks
 function desplegar(desplegable) {
@@ -826,13 +864,13 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
 
     window.location = 'camarero.html';
 
-    let mesasAtendidas =  JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
-    users[localStorage.camareroActual-1].mesasAtendidas = mesasAtendidas +1;
+    let mesasAtendidas = JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
+    users[localStorage.camareroActual - 1].mesasAtendidas = mesasAtendidas + 1;
     localStorage.setItem("camarero", JSON.stringify(users))
 }
 
 
-function iniciarMesa(){
+function iniciarMesa() {
     iniciarDesplegables();
     sumarYRestar();
     var add = adicionarComanda();
