@@ -86,7 +86,7 @@ function iniciar() {
                 nombre_camarero: `camarero${i}`,
                 password: "1234",
                 mesasActuales: {},
-                mesasAtendidas: {}
+                mesasAtendidas: 0
             }
             listaCamareros.push(camarero);
         }
@@ -108,7 +108,7 @@ function iniciar() {
 
         var menu = {
             "id_articulo": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            'nombre': ['tinto', 'blanco', 'cerveza', 'refresco', 'zumo', 'café', 'café especial', 'gazpacho', 'ensalada mixta', 'ensaladilla', 'lasaña', 'puré de verduras', 'secreto ibérico', 'escalope de pollo', 'bacalao a la riojana', 'hamburguesa', 'tarta de queso', 'fruta del tiempo', 'flan de la casa', 'tarta de la abuela', 'Varios'],
+            'nombre': ['Vino tinto', 'Vino blanco', 'Cerveza', 'Refresco', 'Zumo', 'Café', 'Café especial', 'Gazpacho', 'Ensalada mixta', 'Ensaladilla', 'Lasaña', 'Puré de verduras', 'Secreto ibérico', 'Escalope de pollo', 'Bacalao a la riojana', 'Hamburguesa', 'Tarta de queso', 'Fruta del tiempo', 'Flan de la casa', 'Tarta de la abuela', 'Varios'],
             'precio': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
         }
         subir('menu', JSON.stringify(menu));
@@ -174,6 +174,7 @@ function imprimirTicket(id_ticket_entrada) {
             var cant = document.createElement("td");
             var total = document.createElement("td");
             articulo.innerHTML = articulos[i];
+            articulo.setAttribute("class", "t_articulos")
             precio.innerHTML = precios[i];
             cant.innerHTML = comanda[i];
             total.innerHTML = comanda[i] * precios[i];
@@ -192,7 +193,7 @@ function imprimirTicket(id_ticket_entrada) {
     var p_id_ticket = document.getElementById("t_id_ticket");
     p_id_ticket.innerText = ticket[0].id_ticket;
     var p_id_mesa = document.getElementById("t_id_mesa");
-    p_id_mesa.innerText = ticket[0].id_mesa;
+    p_id_mesa.innerText = ticket[0].id_mesa + 1;
 }
 
 function consulta_ticket(id_ticket) {
@@ -202,10 +203,16 @@ function consulta_ticket(id_ticket) {
 
 
 // ---------------------------------------PASARELA DE PAGO -----------------------------------
-function pagar() {
+
+function cargarPago(){
     var ticketSeleccionado = localStorage.ticketSeleccionado
-    console.log(ticketSeleccionado)
-    var precio = JSON.parse(localStorage.ticket)[ticketSeleccionado].total
+    var tickets = JSON.parse(localStorage.ticket)
+    var pagado = tickets[ticketSeleccionado].pagado;
+    if(pagado){
+        alert("Esta cuenta está pagada. muchas gracias");
+        window.location="index.html"
+    }
+    var precio = tickets[ticketSeleccionado].total
     console.log(precio)
     var p_total = document.getElementById("p_total")
     p_total.innerText = precio + "€"
@@ -221,6 +228,13 @@ function checkPago() {
     console.log((visa.match(/^4\d{3}-?\d{4}-?\d{4}-?\d{4}$/)))
     console.log((visa.match(/^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/)))
     var nombre = document.getElementById("nombre_tarjeta").value;
+    var ticketSeleccionado = localStorage.ticketSeleccionado
+    var tikets = JSON.parse(localStorage.ticket)
+    var pagado = tikets[ticketSeleccionado].pagado;
+    if(pagado){
+        alert("Esta cuenta está pagada. muchas gracias");
+        window.location="index.html"
+    }
     if (!nombre.match(/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u)) {
         alert("El nombre introducido no es válido.");
         validation = false;
@@ -245,13 +259,16 @@ function checkPago() {
     if (validation && validationCard) {
         alert("Operación finalizada con éxito.")
         window.location = "index.html"
+        pagado=true;
     }
-
+    tikets[ticketSeleccionado].pagado = pagado;
+    localStorage.setItem("ticket",JSON.stringify(tikets))
 }
 // ---------------------------------------------- FUNCIONES ADMIN -------------------------------------
 
 function mostrarDatos() {
     let users = JSON.parse(localStorage.camarero);
+    let rendimiento = document.getElementsByClassName("a_rendimiento")
     let username = users.map(element => element.nombre_camarero);
     let password = users.map(element => element.password);
     var placeholders_name = document.getElementsByClassName("userName");
@@ -259,20 +276,31 @@ function mostrarDatos() {
     console.log(placeholders_name)
     console.log(placeholders_pass)
     for (let i = 0; i < placeholders_name.length; i++) {
-        placeholders_name[i].placeholder = username[i];
-        placeholders_pass[i].placeholder = password[i];
+        placeholders_name[i].value = username[i];
+        placeholders_pass[i].value = password[i];
+        rendimiento[i].innerHTML = users[i].mesasAtendidas;
     };
 }
-function guardarCambios() {
-    var name = document.getElementsByClassName("userName").value;
-    var pass = document.getElementsByClassName("userPass").value;
+
+function guardarCambios(){
     var placeholders_name = document.getElementsByClassName("userName");
     var placeholders_pass = document.getElementsByClassName("userPass");
+    var names = [];
+    var pass = [];
     let users = JSON.parse(localStorage.camarero);
     for (let i = 0; i < placeholders_name.length; i++) {
-        placeholders_name[i].placeholder = username[i];
-        placeholders_pass[i].placeholder = password[i];
+        names.push(placeholders_name[i].value);
+        pass.push(placeholders_pass[i].value);
     };
+    console.log(names)
+    console.log(pass)
+    console.log(users)
+    for (let k = 0; k < placeholders_name.length; k++) {
+        users[k].nombre_camarero = names[k];
+        users[k].password = pass[k];
+    };
+    console.log(users)
+    localStorage.setItem("camarero",JSON.stringify(users))
 }
 
 
@@ -656,7 +684,7 @@ function sumarYRestar() {
 }
 
 //Añadir pedidos a la comanda
-function añadirComanda() {
+function adicionarComanda() {
     //Recoger mesaActual
     var mesa = JSON.parse(localStorage.getItem('mesa'));
     // localStorage.setItem('mesaActual', 1);
@@ -761,14 +789,15 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
     let users = JSON.parse(localStorage.camarero);
     let username = users.map(element => element.nombre_camarero);
     var camareroActual = localStorage.getItem("camareroActual")
+    var camareroActualN = "";
     switch (camareroActual) {
-        case "1": camareroActual = username[0]
+        case "1": camareroActualN = username[0]
             break;
-        case "2": camareroActual = username[1]
+        case "2": camareroActualN = username[1]
             break;
-        case "3": camareroActual = username[2]
+        case "3": camareroActualN = username[2]
             break;
-        case "4": camareroActual = username[3]
+        case "4": camareroActualN = username[3]
             break;
     }
 
@@ -781,13 +810,13 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
         total += mesa[mesaActual].comanda[i] * menu.precio[i];
     }
     if (!ticketsLista) {
-        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        var newTicket = new Ticket(0, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
         inicioTicket.push(newTicket);
         localStorage.setItem("ticket", JSON.stringify(inicioTicket))
     } else {
         var id_anterior = ticketsLista[ticketsLista.length - 1].id_ticket + 1;
         console.log(ticketsLista)
-        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActual, mesa[mesaActual].comanda, total, pagado);
+        var newTicket = new Ticket(id_anterior, fechaticket, mesaActual, camareroActualN, mesa[mesaActual].comanda, total, pagado);
         ticketsLista.push(newTicket);
         localStorage.setItem("ticket", JSON.stringify(ticketsLista))
     }
@@ -796,18 +825,22 @@ function cerrarMesa(mesa, mesaActual, camareroActual) {
     localStorage.setItem('mesa', JSON.stringify(mesa));
 
     window.location = 'camarero.html';
+
+    let mesasAtendidas =  JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
+    users[localStorage.camareroActual-1].mesasAtendidas = mesasAtendidas +1;
+    localStorage.setItem("camarero", JSON.stringify(users))
 }
 
 
-function iniciarMesa() {
+function iniciarMesa(){
     iniciarDesplegables();
     sumarYRestar();
-    var añadir = añadirComanda();
-    verComanda(añadir[0], añadir[1]);
+    var add = adicionarComanda();
+    verComanda(add[0], add[1]);
 
     var cerrar = document.querySelector('#m_cerrarMesa');
     cerrar.addEventListener('click', () => {
-        cerrarMesa(añadir[0], añadir[1], añadir[2]);
+        cerrarMesa(add[0], add[1], add[2]);
     });
 
     //Estilo desplegable

@@ -1,4 +1,4 @@
-/*---ADMIN--- */
+/* ------------------------------- ADMIN AREA --------------------------------------- */
 
 #a_gestion{
     margin-left: 20px;
@@ -246,3 +246,45 @@ div.m_opciones h2 {
     padding: 4px;
     border-radius: 5px;
 }
+
+/* ----------------------------------------- Ticket ------------------------ */
+#t_header{
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(0, 0, 0, 0.5);
+    color: white;
+    text-align: right;
+    font-size: 20px
+}
+#t_head{
+    text-align: center;
+    margin-bottom: 20px;
+}
+#t_head p{
+    margin: 0;
+}
+#t_body{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-left: 20px;
+    align-content: center;
+
+}
+.t_fila{
+    display: flex;
+    flex-direction: row;
+}
+.t_fila p{
+    margin: 2px;
+}
+.t_articulos{
+    text-align: left;
+}
+#t_pagar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+ /* ----------------------------------------- Pago -------------------------------------- */
+
