@@ -1,21 +1,57 @@
 /* ------------------------------- ADMIN AREA --------------------------------------- */
-
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+header#a_header{
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(0, 0, 0, 0.5);
+    color: white;
+    text-align: right;
+    font-size: 4vw
+}
 #a_gestion{
-    margin-left: 20px;
+    text-align: center;
+    margin-left: 0;
     margin-bottom: 50px;
 }
+#a_gestion h2{
+    margin: 5px 0px
+}
 #a_tabla{
-    padding-left: 30px;
+    padding: 0 20px;
     justify-content: center;
     display: flex;
     flex-direction: column;
 }
-
-.a_tablaH, .a_tablaR {
-    height: 36px;
+.a_tablaH{
+    height: 12vw;
+    font-size: 3.8vw;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    padding-right: 4vw;
+    text-align: start;
+}
+.a_tablaR {
+    height: 12vw;
+    font-size: 3.8vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.a_ids{
+    font-size: 3vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+p.a_rendimiento {
+    margin-left: 1vw;
+    font-size: 3.8vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 .a_rendimiento{
     display: block;
@@ -28,7 +64,7 @@
 }
 
 .a_tablaR input{
-    margin: 10px 5px;
+    margin: 0 5px;
     width: 30%;
     height: 30px; ;
 }
@@ -37,10 +73,9 @@
     margin-bottom: 30px;
 }
 #a_gestion button{
-    margin: 20%;
-    margin-top: 20px;
-    margin-bottom: 0%
-    ;
+    font-size: 4.3vw;
+    margin: 30px 20px;
+   width: 26vw;
 }
 
 /*-----CAMARERO-------*/
@@ -132,10 +167,7 @@
 
 /* ----MESA----*/
 
-* {
-    margin: 0px;
-    padding: 0px;
-}
+
 
 #m_contenedorGeneral {
     display: flex;
@@ -254,11 +286,14 @@ div.m_opciones h2 {
     background-color: rgb(0, 0, 0, 0.5);
     color: white;
     text-align: right;
-    font-size: 20px
+    font-size: 4vw;
 }
 #t_head{
     text-align: center;
     margin-bottom: 20px;
+}
+#t_head h1{
+    font-size: 8vw;
 }
 #t_head p{
     margin: 0;
@@ -267,9 +302,12 @@ div.m_opciones h2 {
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding-left: 20px;
+    padding: 0 20px;
     align-content: center;
 
+}
+#t_tabla{
+    margin-top: 10px;
 }
 .t_fila{
     display: flex;
@@ -287,4 +325,52 @@ div.m_opciones h2 {
     justify-content: center;
 }
  /* ----------------------------------------- Pago -------------------------------------- */
-
+#p_body{
+    align-content: center;
+}
+#p_total{
+    margin: 1vw 1vw;
+    padding: 0;
+    font-size: 10vw;
+}
+ #p_contenedor{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+}
+#p_contenedor h4{
+padding: 0 5vw;
+}
+#p_contenedor h2{
+    margin: 2vw 2vw;
+    padding: 0 5vw;
+    }
+#p_caducidad{
+    display: flex;
+    flex-direction: row;
+}
+#p_caducidad input{
+    width: 10vw
+}
+#p_tpv{
+    border: black solid 2px;
+    padding: 5vw;
+    margin-bottom: 10px;
+}
+/* ------------------------------------------ Index --------------------------------------- */
+#i_ticket{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#i_login{
+    margin: 30px;
+    padding-bottom: 30px;
+    border: 2px solid black;
+    position: relative;
+    top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
