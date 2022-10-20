@@ -303,6 +303,7 @@ function mostrarDatos() {
     for (let i = 0; i < placeholders_name.length; i++) {
         placeholders_name[i].value = username[i];
         placeholders_pass[i].value = password[i];
+
     }
     rendimiento[0].innerHTML = mesasAtendidas1;
     rendimiento[1].innerHTML = mesasAtendidas2;
@@ -633,72 +634,66 @@ function historial() {
             }
         }
 
-        //Añadir pedidos a la comanda
-        function adicionarComanda() {
-            //Recoger mesaActual
-            var mesa = JSON.parse(localStorage.getItem('mesa'));
-            // localStorage.setItem('mesaActual', 1);
-            var mesaActual = parseInt(localStorage.getItem('mesaActual'));
-            var camareroActual = parseInt(localStorage.getItem('camareroActual'));
-            document.querySelector('h1').innerHTML = 'Mesa' + ' ' + (mesaActual + 1);
-            document.querySelector('#m_cerrarMesa').innerHTML = 'Generar Cuenta Mesa' + ' ' + (mesaActual + 1);
-            var comanda = mesa[mesaActual].comanda;
+//Funcion para borrar la comanda una vez se genere la cuenta
+function borraComanda() {
+    var mostrarComanda = document.querySelector('#m_comanda');
+    borrarChild(mostrarComanda);
+}
 
-            //Añadir cantidades
-            var spanCantidad = document.getElementsByClassName('cantidad');
+//Muestra la comanda de la mesa Actual
+function verComanda(mesa, mesaActual) {
+    borraComanda();
+    var menu = JSON.parse(localStorage.getItem('menu'));
+    var mostrarComanda = document.querySelector('#m_comanda');
+    let ul = document.createElement('ul');
+    ul.style.display = 'flex';
+    ul.style['flex-flow'] = 'row wrap';
+    ul.style['justify-content'] = 'space-evenly';
 
-            var añadir = document.getElementById('m_añadir');
-            añadir.addEventListener('click', () => {
-                for (let i = 0; i < spanCantidad.length; i++) {
-                    let cantidad = spanCantidad[i].innerHTML;
-                    if (cantidad > 0) {
-                        comanda[i] = parseInt(comanda[i]) + parseInt(cantidad);
-                        spanCantidad[i].innerHTML = 0;
-                    }
-                }
-                mesa[mesaActual].comanda = comanda;
-                mesa[mesaActual].id_camarero = camareroActual;
-                localStorage.setItem('mesa', JSON.stringify(mesa));
-                verComanda(mesa, mesaActual)
-            });
+    let h2 = document.createElement('h2');
+    h2.style.display = 'flex';
+    h2.style['flex-flow'] = 'column wrap';
+    h2.style['align-items'] = 'center';
+    h2.innerHTML = 'Comanda';
 
-            return [mesa, mesaActual, camareroActual]
+    mostrarComanda.append(h2);
+    mostrarComanda.append(ul);
+
+    for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
+        if (mesa[mesaActual].comanda[j] > 0) {
+            let li = document.createElement('li');
+            li.setAttribute('class', 'articuloComanda');
+            li.style.cursor = 'pointer'
+            li.style.padding = '5px';
+            li.style.margin = '3px';
+            li.style.border = '1px solid black';
+            li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
+            ul.append(li);
         }
+    }
+}
 
-        function borraComanda() {
-            var mostrarComanda = document.querySelector('#m_comanda');
-            borrarChild(mostrarComanda);
-        }
+//funcion desplegables para reutilizar en los clicks
+function desplegar(desplegable) {
+    let display = desplegable.style.display;
+    if (display == 'none') {
+        desplegable.style.display = 'block';
+    } else {
+        desplegable.style.display = 'none';
+    }
+}
+//TICKET
+class Ticket {
+    constructor(id_ticket, fecha, id_mesa, nombre_camarero, comanda, total, pagado) {
+        this.id_ticket = id_ticket;
+        this.fecha = fecha;
+        this.id_mesa = id_mesa;
+        this.nombre_camarero = nombre_camarero;
+        this.comanda = comanda;
+        this.total = total;
+        this.pagado = pagado;
+    }
 
-        function verComanda(mesa, mesaActual) {
-            borraComanda();
-            var menu = JSON.parse(localStorage.getItem('menu'));
-            var mostrarComanda = document.querySelector('#m_comanda');
-            let ul = document.createElement('ul');
-            ul.style.display = 'flex';
-            ul.style['flex-flow'] = 'row wrap';
-            ul.style['justify-content'] = 'space-evenly';
-
-            let h2 = document.createElement('h2');
-            h2.style.display = 'flex';
-            h2.style['flex-flow'] = 'column wrap';
-            h2.style['align-items'] = 'center';
-            h2.innerHTML = 'Comanda';
-
-            mostrarComanda.append(h2);
-            mostrarComanda.append(ul);
-
-            for (let j = 0; j < mesa[mesaActual].comanda.length; j++) {
-                if (mesa[mesaActual].comanda[j] > 0) {
-                    let li = document.createElement('li');
-                    li.style.padding = '5px';
-                    li.style.margin = '3px';
-                    li.style.border = '1px solid black';
-                    li.innerHTML = `${menu.nombre[j]}: ${mesa[mesaActual].comanda[j]}`
-                    ul.append(li);
-                }
-            }
-        }
 
         //funcion desplegables para reutilizar en los clicks
         function desplegar(desplegable) {
@@ -776,31 +771,33 @@ function historial() {
 
             window.location = 'camarero.html';
 
-            let mesasAtendidas = JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
-            users[localStorage.camareroActual - 1].mesasAtendidas = mesasAtendidas + 1;
-            localStorage.setItem("camarero", JSON.stringify(users))
-        }
+
+    let mesasAtendidas = JSON.parse(localStorage.camarero)[localStorage.camareroActual].mesasAtendidas;
+    users[localStorage.camareroActual - 1].mesasAtendidas = mesasAtendidas + 1;
+    localStorage.setItem("camarero", JSON.stringify(users))
+}
 
 
-        function iniciarMesa() {
-            iniciarDesplegables();
-            sumarYRestar();
-            var add = adicionarComanda();
-            verComanda(add[0], add[1]);
+function iniciarMesa() {
+    iniciarDesplegables();
+    sumarYRestar();
+    var add = adicionarComanda();
+    verComanda(add[0], add[1]);
 
-            var cerrar = document.querySelector('#m_cerrarMesa');
-            cerrar.addEventListener('click', () => {
-                cerrarMesa(add[0], add[1], add[2]);
-            });
+    var cerrar = document.querySelector('#m_cerrarMesa');
+    cerrar.addEventListener('click', () => {
+        cerrarMesa(add[0], add[1], add[2]);
+    });
 
-            //Estilo desplegable
-            var desplegables = document.getElementsByClassName('m_desplegables');
-            var opciones = document.querySelectorAll('.m_opciones h2');
-            for (let i = 0; i < opciones.length; i++) {
-                opciones[i].addEventListener('click', () => {
-                    desplegar(desplegables[i]);
-                });
-            }
+    //Estilo desplegable
+    var desplegables = document.getElementsByClassName('m_desplegables');
+    var opciones = document.querySelectorAll('.m_opciones h2');
+    for (let i = 0; i < opciones.length; i++) {
+        opciones[i].addEventListener('click', () => {
+            desplegar(desplegables[i]);
+        });
+    }
+
 
             //Boton de Volver
             var volver = document.querySelector('#m_volver');

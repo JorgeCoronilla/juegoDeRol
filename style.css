@@ -1,4 +1,5 @@
 /* ------------------------------- ADMIN AREA --------------------------------------- */
+
 *{
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -24,6 +25,7 @@ header#a_header{
     display: flex;
     flex-direction: column;
 }
+
 .a_tablaH{
     height: 12vw;
     font-size: 3.8vw;
@@ -53,25 +55,31 @@ p.a_rendimiento {
     flex-direction: row;
     align-items: center;
 }
-.a_rendimiento{
+
+.a_rendimiento {
     display: block;
-    width:30%;
+    width: 30%;
     height: 30px;
 }
-.a_ids{
+
+.a_ids {
     height: 30px;
     width: 10%;
 }
 
+
 .a_tablaR input{
     margin: 0 5px;
     width: 30%;
-    height: 30px; ;
+    height: 30px;
+    ;
 }
-#a_resultados{
+
+#a_resultados {
     margin-left: 20px;
     margin-bottom: 30px;
 }
+
 #a_gestion button{
     font-size: 4.3vw;
     margin: 30px 20px;
@@ -82,17 +90,21 @@ p.a_rendimiento {
 
 
 /*-----CAMARERO-------*/
-.c_cpntainer1, .c_cpntainer2, .c_cpntainer3 {
+.c_cpntainer1,
+.c_cpntainer2,
+.c_cpntainer3 {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-items:center;
+    align-items: center;
 }
 
-.c_cpntainer1 div, .c_cpntainer2 div, .c_cpntainer3 div {
+.c_cpntainer1 div,
+.c_cpntainer2 div,
+.c_cpntainer3 div {
     align-self: center;
     margin: 0 auto 0 auto;
-} 
+}
 
 .c_mesasA {
     width: 50px;
@@ -132,12 +144,14 @@ p.a_rendimiento {
 .c_mesasR:hover {
     background-color: rgb(255, 0, 51);
 }
+
 #c_header {
     background-color: rgb(0, 0, 0, 0.5);
     color: white;
     text-align: right;
-    
+
 }
+
 #c_header h4 {
     font-size: 10px;
     font-family: Arial, Helvetica, sans-serif;
@@ -170,22 +184,20 @@ p.a_rendimiento {
 
 /* ----MESA----*/
 
-
-
 #m_contenedorGeneral {
+    width: 100%;
+    min-width: 256px;
     display: flex;
     flex-flow: column wrap;
     justify-content: center;
     align-items: center;
 }
 
-div#m_volver {
+button#m_volver {
     position: fixed;
     font-weight: bold;
     top: 10px;
     right: 10px;
-    background-color: black;
-    color: white;
     padding: 4px;
     border-radius: 5px;
 }
@@ -213,6 +225,7 @@ section#m_mesa h1 {
     font-size: 40px;
     margin-bottom: 10px;
     border-bottom: 1px solid black;
+    background-color: rgb(174, 174, 174);
 }
 
 section#m_menu {
@@ -234,6 +247,9 @@ div#m_botones {
 div.m_opciones {
     width: 100%;
     margin-bottom: 20px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
 
 div.m_opciones h2 {
@@ -241,49 +257,57 @@ div.m_opciones h2 {
     display: flex;
     justify-content: center;
     background-color: rgb(174, 174, 174);
+    cursor: pointer;
 }
 
-.m_desplegables {
+ul.m_desplegables {
     display: none;
+    margin-top: 5px;
+    width: 70%;
+    max-width: 560px;
 }
 
 .m_desplegables li {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
     justify-content: space-between;
     font-size: 18px;
     margin-bottom: 5px;
 }
 
 .m_desplegables li .articulo {
-    margin-left: 80px;
+    width: fit-content;
 }
 
 .m_desplegables li>span {
-    margin-right: 80px;
+    width: 45px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.m_desplegables li>span span {
+    cursor: pointer;
 }
 
 #m_contenedorGeneral li {
     list-style: none;
 }
 
-#m_botones #m_añadir{
+#m_botones #m_añadir {
     margin: 8px;
-    background-color: black;
-    color: white;
     padding: 4px;
     border-radius: 5px;
 }
-#m_botones #m_cerrarMesa{
+
+#m_botones #m_cerrarMesa {
     margin: 8px;
-    background-color: black;
-    color: white;
     padding: 4px;
     border-radius: 5px;
 }
 
 /* ----------------------------------------- Ticket ------------------------ */
-#t_header{
+#t_header {
     display: flex;
     justify-content: space-around;
     background-color: rgb(0, 0, 0, 0.5);
@@ -291,17 +315,21 @@ div.m_opciones h2 {
     text-align: right;
     font-size: 4vw;
 }
-#t_head{
+
+#t_head {
     text-align: center;
     margin-bottom: 20px;
 }
+
 #t_head h1{
     font-size: 8vw;
 }
 #t_head p{
+
     margin: 0;
 }
-#t_body{
+
+#t_body {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -309,6 +337,7 @@ div.m_opciones h2 {
     align-content: center;
 
 }
+
 #t_tabla{
     margin-top: 10px;
 }
@@ -316,17 +345,21 @@ div.m_opciones h2 {
     display: flex;
     flex-direction: row;
 }
-.t_fila p{
+
+.t_fila p {
     margin: 2px;
 }
-.t_articulos{
+
+.t_articulos {
     text-align: left;
 }
-#t_pagar{
+
+#t_pagar {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
+
  /* ----------------------------------------- Pago -------------------------------------- */
 #p_body{
     align-content: center;
@@ -377,3 +410,4 @@ padding: 0 5vw;
     flex-direction: column;
     align-items: center;
 }
+
